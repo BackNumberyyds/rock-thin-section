@@ -1,0 +1,8 @@
+.bg-image {
+    background-image: url("../img/02419240016648949561733.jpeg");
+    /* position: relative; */
+    /* overflow: hidden; */
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 50%;
+}
