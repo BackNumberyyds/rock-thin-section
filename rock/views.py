@@ -69,7 +69,7 @@ class FileFieldFormView(SuperUserRequiredMixin, FormView):
                 except NameRepeatError:
                     messages.error(request, f'\'%s\'文件重复，无法导入。' % f.name)
                     error_files_num = error_files_num + 1
-                except ValueError:
+                except BaseException:
                     messages.error(request, f'\'%s\'文件命名不正确，无法导入。' % f.name)
                     error_files_num = error_files_num + 1
             messages.info(request, f'共选择%d个文件，成功导入%d个，失败%d个。' %

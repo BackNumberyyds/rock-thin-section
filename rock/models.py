@@ -45,4 +45,4 @@ class PicInfo(models.Model):
     remarks = models.CharField(max_length=30, null=True, blank=True)
 
     def __str__(self):
-        return self.image.name.split('/')[-1].split('.')[0]
+        return '.'.join(self.image.name.split('/')[-1].split('.')[:-1])
