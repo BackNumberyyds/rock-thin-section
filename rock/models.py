@@ -21,12 +21,13 @@ def get_upload_to(instance, filename):
     return os.path.join('img/rocks/', str(instance.mine_num.region), instance.mine_num.name, filename)
 
 
-class PicInfo(models.Model):
+ORTH_MODE = (
+    ('o', '正交'),
+    ('p', '单偏'),
+)
 
-    ORTH_MODE = (
-        ('o', '正交'),
-        ('p', '单偏'),
-    )
+
+class PicInfo(models.Model):
 
     # 井号
     mine_num = models.ForeignKey(Mine, on_delete=models.SET_NULL, null=True)

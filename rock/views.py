@@ -4,7 +4,7 @@ from django.views.generic.edit import FormView
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.urls import reverse_lazy
-from .forms import FileFieldForm
+from .forms import FileFieldForm, NormalSerchForm, DetailedSearchForm
 from .models import PicInfo, Mine, Region
 
 
@@ -19,8 +19,16 @@ class SuperUserRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
 
 
 def index(request):
+    # picinfos = PicInfo.objects.all()[:12]
+    # return render(request, 'index.html', {'pics': picinfos})
     picinfos = PicInfo.objects.all()[:12]
-    return render(request, 'index.html', {'pics': picinfos})
+    if request.method == 'POST':
+        normal_form = NormalSerchForm(request.POST)
+        detailed_form = DetailedSearchForm()
+    else:
+        normal_form = NormalSerchForm()
+        detailed_form = DetailedSearchForm()
+    return render(request, 'index.html', {'pics': picinfos, 'normal_form': normal_form, 'detailed_form': detailed_form})
 
 
 class FileFieldFormView(SuperUserRequiredMixin, FormView):
@@ -77,3 +85,12 @@ class FileFieldFormView(SuperUserRequiredMixin, FormView):
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
+
+
+def search_rocks(request):
+    if request.method == 'POST':
+        pass
+    else:
+        normal_form = NormalSerchForm()
+        detailed_form = DetailedSearchForm()
+    return render(request, )

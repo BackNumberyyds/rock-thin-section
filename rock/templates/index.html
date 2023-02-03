@@ -4,20 +4,72 @@
 <main>
 
     <section class="py-5 text-center container-fluid bg-image">
-        <div class="row py-lg-5 px-5">
-            <div class="col-lg-6 col-md-8 mx-auto">
-                <h3 class="fw-light text-white mb-5"><strong>搜索岩石薄片</strong></h1>
+        <div class="row py-lg-5 px-lg-5">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                <h3 class="fw-light text-white"><strong>搜索岩石薄片</strong></h1>
+                    <!-- <form>
+                        {{ normal_form }}
+                        <button type="submit">Search</button>
+                    </form> -->
+                    <!-- <form>
+                        {{ detailed_form }}
+                        <button type="submit">Search</button>
+                    </form> -->
                     <form>
-                        <input class="form-control mb-2" type="text" placeholder="Search" aria-label="Search">
+                        <div class="row mt-4 align-items-center">
+                            <div class="col-3 col-md-4 d-flex justify-content-end text-white">
+                                {{ detailed_form.region_field.label_tag }}
+                            </div>
+                            <div class="col-lg-5 col-md-4 col-auto">
+                                {{ detailed_form.region_field }}
+                            </div>
+                        </div>
+                        <div class="row mt-3 align-items-center">
+                            <div class="col-3 col-md-4 d-flex justify-content-end text-white">
+                                {{ detailed_form.mine_field.label_tag }}
+                            </div>
+                            <div class="col-lg-6 col-sm-5 col-auto">
+                                {{ detailed_form.mine_field }}
+                            </div>
+                        </div>
+                        <div class="row mt-3 align-items-center">
+                            <div class="col-md-4 col-3 d-flex justify-content-end text-white">
+                                {{ detailed_form.depth_field.label_tag }}
+                            </div>
+                            <div class="col-lg-4 col-sm-3 col-auto">
+                                {{ detailed_form.depth_field }}
+                            </div>
+                            <div class="col-auto">
+                                <span class="form-text text-white">
+                                    可输入范围，例如"500.0-550.0"
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row mt-sm-3">
+                            <div class="col-sm-6">
+                                <div class="row mt-sm-0 mt-3 align-items-center">
+                                    <div class="col-md-8 col-sm-6 col-3 d-flex justify-content-end text-white">
+                                        {{ detailed_form.lens_field.label_tag }}
+                                    </div>
+                                    <div class="col-md-4 col-sm-6 col-3">
+                                        {{ detailed_form.lens_field }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="row mt-sm-0 mt-3 align-items-center">
+                                    <div class="col-md-4 col-sm-4 col-3 d-flex justify-content-end text-white">
+                                        {{ detailed_form.orth_field.label_tag }}
+                                    </div>
+                                    <div class="col-sm-4 col-3">
+                                        {{ detailed_form.orth_field }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg mt-4">搜索</button>
                     </form>
                     <a href="{% url 'logout' %}" class="text-white">进一步搜索</a>
-                    <!-- <p class="lead text-muted">Something short and leading about the collection below—its contents, the
-                        creator, etc. Make it short and sweet, but not too short so folks don’t simply skip over it
-                        entirely.</p>
-                    <p>
-                        <a href="#" class="btn btn-primary my-2">Main call to action</a>
-                        <a href="#" class="btn btn-secondary my-2">Secondary action</a>
-                    </p> -->
             </div>
         </div>
     </section>
