@@ -8,14 +8,11 @@ class FileFieldForm(forms.Form):
 
 
 class NormalSerchForm(forms.Form):
-    search_field = forms.CharField(max_length=100, widget=forms.TextInput(
-        attrs={'class': 'form-control mb-2', 'placeholder': 'Search'}))
+    search_field = forms.CharField(max_length=100, label=False, widget=forms.TextInput(
+        attrs={'class': 'form-control mb-2'}))
 
 
-CHOICE = [
-    ('单偏', 'dwad'),
-    ('正交', 'dad')
-]
+ORTH_CHOICE = (('', '———'),) + ORTH_MODE
 
 
 class DetailedSearchForm(forms.Form):
@@ -28,4 +25,4 @@ class DetailedSearchForm(forms.Form):
     lens_field = forms.IntegerField(
         label='物镜倍数', required=False, widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm'}))
     orth_field = forms.ChoiceField(
-        label='正交偏光', required=False, choices=ORTH_MODE, widget=forms.Select(attrs={'class': 'form-select form-select-sm', 'style': 'height:31px'}))
+        label='正交偏光', required=False, choices=ORTH_CHOICE, widget=forms.Select(attrs={'class': 'form-select form-select-sm'}))

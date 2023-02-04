@@ -7,15 +7,30 @@
         <div class="row py-lg-5 px-lg-5">
             <div class="col-lg-8 col-md-10 mx-auto">
                 <h3 class="fw-light text-white"><strong>搜索岩石薄片</strong></h1>
-                    <!-- <form>
-                        {{ normal_form }}
-                        <button type="submit">Search</button>
-                    </form> -->
-                    <!-- <form>
-                        {{ detailed_form }}
-                        <button type="submit">Search</button>
-                    </form> -->
-                    <form>
+
+                    {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+                            {% endfor %}
+                    </ul>
+                    {% endif %}
+
+                    <form id="normal_form">
+                        <div class="row mt-5 align-items-center justify-content-center">
+                            <div class="col-10">
+                                {{ normal_form }}
+                                <div class="form-text text-light">
+                                    岩石薄片地区、井号、井深、物镜倍数、正交偏光等信息
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="form_type" value="normal_form">
+                        <div class="row my-2 align-items-center justify-content-center">
+                            <button type="submit" class="col-3 btn btn-primary btn-sm mt-4">搜索</button>
+                        </div>
+                    </form>
+                    <form style="display:none;" id="detailed_form">
                         <div class="row mt-4 align-items-center">
                             <div class="col-3 col-md-4 d-flex justify-content-end text-white">
                                 <label for="{{ detailed_form.region_field.id_for_label }}" class="form-label">
@@ -77,11 +92,12 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row mt-2 align-items-center justify-content-center">
+                        <input type="hidden" name="form_type" value="detailed_form">
+                        <div class="row my-2 align-items-center justify-content-center">
                             <button type="submit" class="col-3 btn btn-primary btn-sm mt-4">搜索</button>
                         </div>
                     </form>
-                    <a href="{% url 'logout' %}" class="text-white">进一步搜索</a>
+                    <a class="text-white" id="form_toggler">进一步搜索</a>
             </div>
         </div>
     </section>
@@ -145,5 +161,24 @@
                 href="../getting-started/introduction/">getting started guide</a>.</p>
     </div>
 </footer>
+
+<script>
+    var toggleButton = document.getElementById("form_toggler");
+    var normal_form = document.getElementById('normal_form')
+    var detailed_form = document.getElementById('detailed_form')
+
+    toggleButton.addEventListener("click", function () {
+        if (detailed_form.style.display == "none") {
+            normal_form.style.display = "none";
+            detailed_form.style.removeProperty("display")
+            toggleButton.textContent = "返回"
+        } else if (normal_form.style.display == "none") {
+            detailed_form.style.display = "none";
+            normal_form.style.removeProperty("display")
+            toggleButton.textContent = "进一步搜索"
+        }
+    });
+
+</script>
 
 {% endblock %}
