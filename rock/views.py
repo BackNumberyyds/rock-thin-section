@@ -2,8 +2,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
 from django.views.generic.edit import FormView
 from django.shortcuts import render
-from django.http import HttpResponse
 from django.urls import reverse_lazy
+from django.http import HttpResponseRedirect
 from .forms import FileFieldForm, NormalSerchForm, DetailedSearchForm
 from .models import PicInfo, Mine, Region
 
@@ -22,9 +22,13 @@ def index(request):
     # picinfos = PicInfo.objects.all()[:12]
     # return render(request, 'index.html', {'pics': picinfos})
     picinfos = PicInfo.objects.all()[:12]
-    if request.method == 'POST':
-        normal_form = NormalSerchForm(request.POST)
+    if 'form_type' in request.GET:
+        normal_form = NormalSerchForm()
         detailed_form = DetailedSearchForm()
+        if request.GET['form_type'] == 'detailed_form':
+            messages.info(request, 'detailed_form')
+        elif request.GET['form_type'] == 'normal_form':
+            messages.info(request, 'normal_form')
     else:
         normal_form = NormalSerchForm()
         detailed_form = DetailedSearchForm()
