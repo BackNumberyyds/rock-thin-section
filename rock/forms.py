@@ -28,4 +28,4 @@ class DetailedSearchForm(forms.Form):
     lens_field = forms.IntegerField(
         label='物镜倍数', required=False, widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm'}))
     orth_field = forms.ChoiceField(
-        label='正交偏光', required=False, choices=ORTH_MODE, widget=forms.Select(attrs={'class': 'form-select form-control-sm', 'style': 'height:31px'}))
+        label='正交偏光', required=False, choices=ORTH_MODE, widget=forms.Select(attrs={'class': 'form-select form-select-sm', 'style': 'height:31px'}))

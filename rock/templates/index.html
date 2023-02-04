@@ -18,7 +18,9 @@
                     <form>
                         <div class="row mt-4 align-items-center">
                             <div class="col-3 col-md-4 d-flex justify-content-end text-white">
-                                {{ detailed_form.region_field.label_tag }}
+                                <label for="{{ detailed_form.region_field.id_for_label }}" class="form-label">
+                                    {{ detailed_form.region_field.label }}
+                                </label>
                             </div>
                             <div class="col-lg-5 col-md-4 col-auto">
                                 {{ detailed_form.region_field }}
@@ -26,7 +28,9 @@
                         </div>
                         <div class="row mt-3 align-items-center">
                             <div class="col-3 col-md-4 d-flex justify-content-end text-white">
-                                {{ detailed_form.mine_field.label_tag }}
+                                <label for="{{ detailed_form.mine_field.id_for_label }}" class="form-label">
+                                    {{ detailed_form.mine_field.label }}
+                                </label>
                             </div>
                             <div class="col-lg-6 col-sm-5 col-auto">
                                 {{ detailed_form.mine_field }}
@@ -34,7 +38,9 @@
                         </div>
                         <div class="row mt-3 align-items-center">
                             <div class="col-md-4 col-3 d-flex justify-content-end text-white">
-                                {{ detailed_form.depth_field.label_tag }}
+                                <label for="{{ detailed_form.depth_field.id_for_label }}" class="form-label">
+                                    {{ detailed_form.depth_field.label }}
+                                </label>
                             </div>
                             <div class="col-lg-4 col-sm-3 col-auto">
                                 {{ detailed_form.depth_field }}
@@ -49,7 +55,9 @@
                             <div class="col-sm-6">
                                 <div class="row mt-sm-0 mt-3 align-items-center">
                                     <div class="col-md-8 col-sm-6 col-3 d-flex justify-content-end text-white">
-                                        {{ detailed_form.lens_field.label_tag }}
+                                        <label for="{{ detailed_form.lens_field.id_for_label }}" class="form-label">
+                                            {{ detailed_form.lens_field.label }}
+                                        </label>
                                     </div>
                                     <div class="col-md-4 col-sm-6 col-3">
                                         {{ detailed_form.lens_field }}
@@ -59,7 +67,9 @@
                             <div class="col-sm-6">
                                 <div class="row mt-sm-0 mt-3 align-items-center">
                                     <div class="col-md-4 col-sm-4 col-3 d-flex justify-content-end text-white">
-                                        {{ detailed_form.orth_field.label_tag }}
+                                        <label for="{{ detailed_form.orth_field.id_for_label }}" class="form-label">
+                                            {{ detailed_form.orth_field.label }}
+                                        </label>
                                     </div>
                                     <div class="col-sm-4 col-3">
                                         {{ detailed_form.orth_field }}
@@ -67,7 +77,9 @@
                                 </div>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary btn-lg mt-4">搜索</button>
+                        <div class="row mt-2 align-items-center justify-content-center">
+                            <button type="submit" class="col-3 btn btn-primary btn-sm mt-4">搜索</button>
+                        </div>
                     </form>
                     <a href="{% url 'logout' %}" class="text-white">进一步搜索</a>
             </div>
