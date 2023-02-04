@@ -8,6 +8,7 @@ django = "*"
 gunicorn = "*"
 pillow = "*"
 fuzzywuzzy = "*"
+python-levenshtein = "*"
 
 [dev-packages]
 
