@@ -6,6 +6,12 @@ from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from .forms import FileFieldForm, NormalSerchForm, DetailedSearchForm
 from .models import PicInfo, Mine, Region
+from fuzzywuzzy import fuzz, process
+from .models import ORTH_MODE
+
+match_ratio_limit = 75
+minimum_match_ratio = 20
+match_factor = 1
 
 
 class NameRepeatError(Exception):
@@ -19,20 +25,84 @@ class SuperUserRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
 
 
 def index(request):
-    # picinfos = PicInfo.objects.all()[:12]
-    # return render(request, 'index.html', {'pics': picinfos})
+    pic_list = []
+    form_type = 'normal_form'
     picinfos = PicInfo.objects.all()[:12]
+
     if 'form_type' in request.GET:
-        normal_form = NormalSerchForm()
-        detailed_form = DetailedSearchForm()
-        if request.GET['form_type'] == 'detailed_form':
-            messages.info(request, 'detailed_form')
-        elif request.GET['form_type'] == 'normal_form':
-            messages.info(request, 'normal_form')
+        form_type = request.GET['form_type']
+        pics = PicInfo.objects.all()
+        pics_dic = {}
+        for pic in pics:
+            pics_dic[pic.id] = pic.get_clean_name()
+
+        if form_type == 'normal_form':
+            normal_form = NormalSerchForm(request.GET)
+            detailed_form = DetailedSearchForm()
+            if normal_form.is_valid():
+                search = normal_form.cleaned_data['search_field']
+                picinfos = process.extract(
+                    search, pics_dic, scorer=fuzz.token_set_ratio)
+                for pic in picinfos:
+                    id = pic[2]
+                    pic_inst = PicInfo.objects.get(pk=id)
+                    pic_list.append(pic_inst)
+
+        elif form_type == 'detailed_form':
+            normal_form = NormalSerchForm()
+            detailed_form = DetailedSearchForm(request.GET)
+
+            if detailed_form.is_valid():
+                abstract_list = []
+
+                if region_name := detailed_form.cleaned_data['region_field']:
+                    abstract_list.append(region_name)
+
+                if mine_name := detailed_form.cleaned_data['mine_field']:
+                    abstract_list.append(mine_name)
+
+                if depth := detailed_form.cleaned_data['depth_field']:
+                    abstract_list.append('{:g}'.format(depth) + 'm')
+
+                if lens := detailed_form.cleaned_data['lens_field']:
+                    abstract_list.append(str(lens) + 'X')
+
+                if orth := detailed_form.cleaned_data['orth_field']:
+                    abstract_list.append(dict(ORTH_MODE).get(orth))
+
+                abstract = ' '.join(abstract_list)
+                all_ratios = process.extract(
+                    abstract, pics_dic, scorer=fuzz.token_set_ratio, limit=10000)
+                # messages.info(request, all_ratios[0][1])
+
+                if not abstract:
+                    picinfos = all_ratios
+                elif all_ratios[0][1] == 100:
+                    picinfos = [
+                        ratio for ratio in all_ratios if ratio[1] == 100]
+                elif all_ratios[0][1] >= match_ratio_limit:
+                    picinfos = (
+                        match for match in all_ratios if match[1] >= match_ratio_limit)
+                elif all_ratios[0][1] < minimum_match_ratio:
+                    picinfos = []
+                else:
+                    lower_bound = all_ratios[0][1] * match_factor
+                    picinfos = [
+                        ratio for ratio in all_ratios if ratio[1] >= lower_bound]
+
+                for pic in picinfos:
+                    id = pic[2]
+                    pic_inst = PicInfo.objects.get(pk=id)
+                    pic_list.append(pic_inst)
+
+        return render(request, 'index.html', {'pics': all_ratios, 'normal_form': normal_form, 'detailed_form': detailed_form, 'form_type': form_type})
+
     else:
         normal_form = NormalSerchForm()
         detailed_form = DetailedSearchForm()
-    return render(request, 'index.html', {'pics': picinfos, 'normal_form': normal_form, 'detailed_form': detailed_form})
+        pic_list = PicInfo.objects.all()
+
+        return render(request, 'index.html', {'pics': pic_list, 'normal_form': normal_form, 'detailed_form': detailed_form, 'form_type': form_type})
 
 
 class FileFieldFormView(SuperUserRequiredMixin, FormView):

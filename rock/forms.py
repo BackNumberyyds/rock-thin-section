@@ -9,7 +9,7 @@ class FileFieldForm(forms.Form):
 
 class NormalSerchForm(forms.Form):
     search_field = forms.CharField(max_length=100, label=False, widget=forms.TextInput(
-        attrs={'class': 'form-control mb-2'}))
+        attrs={'class': 'form-control mb-2', 'placeholder': '功能开发中', 'disabled': True}))
 
 
 ORTH_CHOICE = (('', '———'),) + ORTH_MODE

@@ -47,3 +47,6 @@ class PicInfo(models.Model):
 
     def __str__(self):
         return '.'.join(self.image.name.split('/')[-1].split('.')[:-1])
+
+    def get_clean_name(self):
+        return ' '.join([str(self.mine_num.region), self.mine_num.name, "{:g}".format(self.depth) + 'm', str(self.lens_mul) + 'X', dict(ORTH_MODE).get(self.orth)])

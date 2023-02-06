@@ -11,12 +11,12 @@
                     {% if messages %}
                     <ul class="messages">
                         {% for message in messages %}
-                        <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+                        <li{% if message.tags %} class="{{ message.tags }} text-white" {% endif %}>{{ message }}</li>
                             {% endfor %}
                     </ul>
                     {% endif %}
 
-                    <form id="normal_form">
+                    <form style="display: none;" id="normal_form">
                         <div class="row mt-5 align-items-center justify-content-center">
                             <div class="col-10">
                                 {{ normal_form }}
@@ -30,7 +30,7 @@
                             <button type="submit" class="col-3 btn btn-primary btn-sm mt-4">搜索</button>
                         </div>
                     </form>
-                    <form style="display:none;" id="detailed_form">
+                    <form style="display: none;" id="detailed_form">
                         <div class="row mt-4 align-items-center">
                             <div class="col-3 col-md-4 d-flex justify-content-end text-white">
                                 <label for="{{ detailed_form.region_field.id_for_label }}" class="form-label">
@@ -60,11 +60,11 @@
                             <div class="col-lg-4 col-sm-3 col-auto">
                                 {{ detailed_form.depth_field }}
                             </div>
-                            <div class="col-auto">
+                            <!-- <div class="col-auto">
                                 <span class="form-text text-white">
                                     可输入范围，例如"500.0-550.0"
                                 </span>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="row mt-sm-3">
                             <div class="col-sm-6">
@@ -116,7 +116,7 @@
                                     <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
                                     <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
                                 </div>
-                                <small class="text-muted">9 mins</small>
+                                <!-- <small class="text-muted">9 mins</small> -->
                             </div>
                         </div>
                     </div>
@@ -163,17 +163,38 @@
 </footer>
 
 <script>
-    var toggleButton = document.getElementById("form_toggler");
+    var toggleButton = document.getElementById("form_toggler")
     var normal_form = document.getElementById('normal_form')
     var detailed_form = document.getElementById('detailed_form')
+    var init_form = "{{ form_type }}"
+    // alert('form type:' + init_form)
+    if (init_form == "detailed_form") {
+        detailed_form.style.removeProperty("display")
+        toggleButton.textContent = "返回"
+    } else {
+        normal_form.style.removeProperty("display")
+        toggleButton.textContent = "进一步搜索"
+    }
+
+    // window.onload = function () {
+    //     var init_form = "{{ form_type }}"
+    //     // alert('form type:' + init_form)
+    //     if (init_form == "detailed_form") {
+    //         normal_form.style.display = "none"
+    //         toggleButton.textContent = "返回"
+    //     } else {
+    //         detailed_form.style.display = "none"
+    //         toggleButton.textContent = "进一步搜索"
+    //     }
+    // }
 
     toggleButton.addEventListener("click", function () {
         if (detailed_form.style.display == "none") {
-            normal_form.style.display = "none";
+            normal_form.style.display = "none"
             detailed_form.style.removeProperty("display")
             toggleButton.textContent = "返回"
         } else if (normal_form.style.display == "none") {
-            detailed_form.style.display = "none";
+            detailed_form.style.display = "none"
             normal_form.style.removeProperty("display")
             toggleButton.textContent = "进一步搜索"
         }
