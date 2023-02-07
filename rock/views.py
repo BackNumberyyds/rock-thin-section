@@ -1,5 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
+from django.core.paginator import Paginator
 from django.views.generic.edit import FormView
 from django.shortcuts import render
 from django.urls import reverse_lazy
@@ -12,6 +13,7 @@ from .models import ORTH_MODE
 match_ratio_limit = 75
 minimum_match_ratio = 20
 match_factor = 1
+pics_per_page = 12
 
 
 class NameRepeatError(Exception):
@@ -28,8 +30,15 @@ def index(request):
     pic_list = []
     form_type = 'normal_form'
     picinfos = PicInfo.objects.all()[:12]
+    query_url_preffix = request.path
+
+    if 'page' in request.GET:
+        page_num = request.GET['page']
+    else:
+        page_num = 1
 
     if 'form_type' in request.GET:
+        query_url_preffix = request.META['QUERY_STRING'].split('&page=')[0]
         form_type = request.GET['form_type']
         pics = PicInfo.objects.all()
         pics_dic = {}
@@ -37,16 +46,17 @@ def index(request):
             pics_dic[pic.id] = pic.get_clean_name()
 
         if form_type == 'normal_form':
-            normal_form = NormalSerchForm(request.GET)
-            detailed_form = DetailedSearchForm()
-            if normal_form.is_valid():
-                search = normal_form.cleaned_data['search_field']
-                picinfos = process.extract(
-                    search, pics_dic, scorer=fuzz.token_set_ratio)
-                for pic in picinfos:
-                    id = pic[2]
-                    pic_inst = PicInfo.objects.get(pk=id)
-                    pic_list.append(pic_inst)
+            # normal_form = NormalSerchForm(request.GET)
+            # detailed_form = DetailedSearchForm()
+            # if normal_form.is_valid():
+            #     search = normal_form.cleaned_data['search_field']
+            #     picinfos = process.extract(
+            #         search, pics_dic, scorer=fuzz.token_set_ratio)
+            #     for pic in picinfos:
+            #         id = pic[2]
+            #         pic_inst = PicInfo.objects.get(pk=id)
+            #         pic_list.append(pic_inst)
+            pass
 
         elif form_type == 'detailed_form':
             normal_form = NormalSerchForm()
@@ -95,14 +105,19 @@ def index(request):
                     pic_inst = PicInfo.objects.get(pk=id)
                     pic_list.append(pic_inst)
 
-        return render(request, 'index.html', {'pics': all_ratios, 'normal_form': normal_form, 'detailed_form': detailed_form, 'form_type': form_type})
+                pics_pages_obj = Paginator(pic_list, pics_per_page)
+                pics_page_obj = pics_pages_obj.get_page(page_num)
+
+        return render(request, 'index.html', {'pics': pics_page_obj, 'normal_form': normal_form, 'detailed_form': detailed_form, 'form_type': form_type, 'query_url_preffix': query_url_preffix})
 
     else:
         normal_form = NormalSerchForm()
         detailed_form = DetailedSearchForm()
         pic_list = PicInfo.objects.all()
+        pics_pages_obj = Paginator(pic_list, pics_per_page)
+        pics_page_obj = pics_pages_obj.get_page(page_num)
 
-        return render(request, 'index.html', {'pics': pic_list, 'normal_form': normal_form, 'detailed_form': detailed_form, 'form_type': form_type})
+        return render(request, 'index.html', {'pics': pics_page_obj, 'normal_form': normal_form, 'detailed_form': detailed_form, 'form_type': form_type})
 
 
 class FileFieldFormView(SuperUserRequiredMixin, FormView):
