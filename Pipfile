@@ -9,6 +9,7 @@ gunicorn = "*"
 pillow = "*"
 fuzzywuzzy = "*"
 python-levenshtein = "*"
+jieba = "*"
 
 [dev-packages]
 
