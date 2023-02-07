@@ -3,7 +3,7 @@
 {% block content %}
 <main class="bg-light">
 
-    <section class="shadow-lg mb-3 py-5 text-center container-fluid bg-image">
+    <section class="py-5 text-center container-fluid bg-image">
         <div class="row py-lg-5 px-lg-5">
             <div class="col-lg-8 col-md-10 mx-auto">
                 <h3 class="fw-light text-white"><strong>搜索岩石薄片</strong></h1>
@@ -101,12 +101,14 @@
             </div>
         </div>
     </section>
+    <div class="row b-divider align-items-center text-center">
+        {% if query_url_preffix %}
+        <div class="h5">共搜索到{{ pics.paginator.count }}个结果</div>
+        {% endif %}
+    </div>
 
-    <div class="album pb-3">
+    <div class="album py-4">
         <div class="container">
-            {% if query_url_preffix %}
-            <div class="mb-2">共搜索到{{ pics.paginator.count }}个结果</div>
-            {% endif %}
 
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
                 {% for pic in pics %}
