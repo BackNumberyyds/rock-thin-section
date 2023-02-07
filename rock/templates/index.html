@@ -57,14 +57,14 @@
                                     {{ detailed_form.depth_field.label }}
                                 </label>
                             </div>
-                            <div class="col-lg-4 col-sm-3 col-auto">
+                            <div class="col-lg-4 col-sm-3 col-auto pe-1">
                                 {{ detailed_form.depth_field }}
                             </div>
-                            <!-- <div class="col-auto">
+                            <div class="col-auto px-0">
                                 <span class="form-text text-white">
-                                    可输入范围，例如"500.0-550.0"
+                                    m
                                 </span>
-                            </div> -->
+                            </div>
                         </div>
                         <div class="row mt-sm-3">
                             <div class="col-sm-6">
@@ -74,8 +74,13 @@
                                             {{ detailed_form.lens_field.label }}
                                         </label>
                                     </div>
-                                    <div class="col-md-4 col-sm-6 col-3">
+                                    <div class="col-sm-3 col-2 pe-1">
                                         {{ detailed_form.lens_field }}
+                                    </div>
+                                    <div class="col-auto px-0">
+                                        <span class="form-text text-white">
+                                            X
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -182,14 +187,18 @@
 
 </main>
 
-<footer class="text-muted py-5">
+<footer>
     <div class="container">
-        <p class="float-end mb-1">
-            <a href="#">Back to top</a>
-        </p>
-        <p class="mb-1">Album example is &copy; Bootstrap, but please download and customize it for yourself!</p>
-        <p class="mb-0">New to Bootstrap? <a href="/">Visit the homepage</a> or read our <a
-                href="../getting-started/introduction/">getting started guide</a>.</p>
+        <footer class="py-3 my-4">
+            <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+                <li class="nav-item"><a href="{{ request.path }}" class="nav-link px-2 text-muted">主页</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">XXX</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">XXX</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">XXX</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">关于</a></li>
+            </ul>
+            <p class="text-center text-muted">&copy; 2023 Zjx.</p>
+        </footer>
     </div>
 </footer>
 

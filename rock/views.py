@@ -28,7 +28,7 @@ class SuperUserRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
 
 def index(request):
     pic_list = []
-    form_type = 'normal_form'
+    form_type = 'detailed_form'
     picinfos = PicInfo.objects.all()[:12]
     query_url_preffix = request.path
 
