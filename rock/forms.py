@@ -20,7 +20,9 @@ class DetailedSearchForm(forms.Form):
         attrs={'class': 'form-control form-control-sm'}))
     mine_field = forms.CharField(max_length=50, label='井号', required=False, widget=forms.TextInput(
         attrs={'class': 'form-control form-control-sm'}))
-    depth_field = forms.FloatField(label='井深', required=False, widget=forms.TextInput(
+    # depth_field = forms.FloatField(label='井深', required=False, widget=forms.TextInput(
+    #     attrs={'class': 'form-control form-control-sm'}))
+    depth_field = forms.FloatField(label='井深', required=False, widget=forms.NumberInput(
         attrs={'class': 'form-control form-control-sm'}))
     lens_field = forms.IntegerField(
         label='物镜倍数', required=False, widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm'}))

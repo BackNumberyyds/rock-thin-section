@@ -29,7 +29,6 @@ class SuperUserRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
 def index(request):
     pic_list = []
     form_type = 'detailed_form'
-    picinfos = PicInfo.objects.all()[:12]
     query_url_preffix = request.path
 
     if 'page' in request.GET:
@@ -83,7 +82,7 @@ def index(request):
                 abstract = ' '.join(abstract_list)
                 all_ratios = process.extract(
                     abstract, pics_dic, scorer=fuzz.token_set_ratio, limit=10000)
-                # messages.info(request, all_ratios[0][1])
+                messages.info(request, all_ratios[0][1])
 
                 if not abstract:
                     picinfos = all_ratios
