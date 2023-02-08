@@ -1,5 +1,5 @@
 from django import forms
-from .models import ORTH_MODE
+from .models import PicInfo
 
 
 class FileFieldForm(forms.Form):
@@ -12,10 +12,9 @@ class NormalSerchForm(forms.Form):
         attrs={'class': 'form-control mb-2', 'placeholder': '功能开发中', 'disabled': True}))
 
 
-ORTH_CHOICE = (('', '———'),) + ORTH_MODE
-
-
 class DetailedSearchForm(forms.Form):
+    ORTH_CHOICE = (('', '———'),) + PicInfo.ORTH_MODE
+
     region_field = forms.CharField(max_length=30, label='地区', required=False, widget=forms.TextInput(
         attrs={'class': 'form-control form-control-sm'}))
     mine_field = forms.CharField(max_length=50, label='井号', required=False, widget=forms.TextInput(

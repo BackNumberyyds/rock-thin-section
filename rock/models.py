@@ -21,13 +21,14 @@ def get_upload_to(instance, filename):
     return os.path.join('img/rocks/', str(instance.mine_num.region), instance.mine_num.name, filename)
 
 
-ORTH_MODE = (
-    ('o', '正交'),
-    ('p', '单偏'),
-)
-
-
 class PicInfo(models.Model):
+    ORTH_MODE = (
+        ('o', '正交'),
+        ('p', '单偏'),
+    )
+
+    FULL_FIELDS = 1
+    PARTIAL_FIELDS = 2
 
     # 井号
     mine_num = models.ForeignKey(Mine, on_delete=models.SET_NULL, null=True)
@@ -48,5 +49,8 @@ class PicInfo(models.Model):
     def __str__(self):
         return '.'.join(self.image.name.split('/')[-1].split('.')[:-1])
 
-    def get_clean_name(self):
-        return ' '.join([str(self.mine_num.region), self.mine_num.name, "{:g}".format(self.depth) + 'm', str(self.lens_mul) + 'X', dict(ORTH_MODE).get(self.orth)])
+    def get_clean_name(self, mode):
+        if mode == self.FULL_FIELDS:
+            return ' '.join([str(self.mine_num.region), self.mine_num.name, "{:g}".format(self.depth) + 'm', str(self.lens_mul) + 'X', dict(self.ORTH_MODE).get(self.orth)])
+        else:
+            return ' '.join([str(self.mine_num.region), self.mine_num.name])

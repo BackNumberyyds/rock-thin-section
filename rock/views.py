@@ -1,6 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
 from django.core.paginator import Paginator
+from django.db.models import QuerySet
 from django.views.generic.edit import FormView
 from django.shortcuts import render
 from django.urls import reverse_lazy
@@ -8,11 +9,11 @@ from django.http import HttpResponseRedirect
 from .forms import FileFieldForm, NormalSerchForm, DetailedSearchForm
 from .models import PicInfo, Mine, Region
 from fuzzywuzzy import fuzz, process
-from .models import ORTH_MODE
 
-match_ratio_limit = 75
-minimum_match_ratio = 20
-match_factor = 1
+minimum_match_ratio = 26
+depth_query_tolerance = 5
+lens_query_tolerance = 1
+
 pics_per_page = 12
 
 
@@ -39,10 +40,7 @@ def index(request):
     if 'form_type' in request.GET:
         query_url_preffix = request.META['QUERY_STRING'].split('&page=')[0]
         form_type = request.GET['form_type']
-        pics = PicInfo.objects.all()
-        pics_dic = {}
-        for pic in pics:
-            pics_dic[pic.id] = pic.get_clean_name()
+        pics_all = PicInfo.objects.all()
 
         if form_type == 'normal_form':
             # normal_form = NormalSerchForm(request.GET)
@@ -62,49 +60,68 @@ def index(request):
             detailed_form = DetailedSearchForm(request.GET)
 
             if detailed_form.is_valid():
-                abstract_list = []
+                pics_queryset = pics_all
 
-                if region_name := detailed_form.cleaned_data['region_field']:
-                    abstract_list.append(region_name)
+                if pics_queryset.exists() and (depth := detailed_form.cleaned_data['depth_field']):
+                    if pics_queryset.filter(depth=depth).exists():
+                        pics_queryset = pics_queryset.filter(depth=depth)
+                    else:
+                        pics_queryset = pics_queryset.filter(depth__range=(
+                            depth-depth_query_tolerance, depth+depth_query_tolerance))
 
-                if mine_name := detailed_form.cleaned_data['mine_field']:
-                    abstract_list.append(mine_name)
+                if pics_queryset.exists() and (lens := detailed_form.cleaned_data['lens_field']):
+                    if pics_queryset.filter(lens_mul=lens).exists():
+                        pics_queryset = pics_queryset.filter(lens_mul=lens)
+                    else:
+                        pics_queryset = pics_queryset.filter(lens_mul__range=(
+                            lens-lens_query_tolerance, lens+lens_query_tolerance))
 
-                if depth := detailed_form.cleaned_data['depth_field']:
-                    abstract_list.append('{:g}'.format(depth) + 'm')
+                if pics_queryset.exists() and (orth := detailed_form.cleaned_data['orth_field']):
+                    pics_queryset = pics_queryset.filter(orth=orth)
 
-                if lens := detailed_form.cleaned_data['lens_field']:
-                    abstract_list.append(str(lens) + 'X')
+                # messages.info(request, str(pics_queryset))
 
-                if orth := detailed_form.cleaned_data['orth_field']:
-                    abstract_list.append(dict(ORTH_MODE).get(orth))
+                # 对地区和井号字段进行模糊搜索
+                if pics_queryset.exists():
+                    abstract_list = []
+                    if region_name := detailed_form.cleaned_data['region_field']:
+                        abstract_list.append(region_name)
 
-                abstract = ' '.join(abstract_list)
-                all_ratios = process.extract(
-                    abstract, pics_dic, scorer=fuzz.token_set_ratio, limit=10000)
-                messages.info(request, all_ratios[0][1])
+                    if mine_name := detailed_form.cleaned_data['mine_field']:
+                        abstract_list.append(mine_name)
 
-                if not abstract:
-                    picinfos = all_ratios
-                elif all_ratios[0][1] == 100:
-                    picinfos = [
-                        ratio for ratio in all_ratios if ratio[1] == 100]
-                elif all_ratios[0][1] >= match_ratio_limit:
-                    picinfos = (
-                        match for match in all_ratios if match[1] >= match_ratio_limit)
-                elif all_ratios[0][1] < minimum_match_ratio:
-                    picinfos = []
-                else:
-                    lower_bound = all_ratios[0][1] * match_factor
-                    picinfos = [
-                        ratio for ratio in all_ratios if ratio[1] >= lower_bound]
+                    # if depth := detailed_form.cleaned_data['depth_field']:
+                    #     abstract_list.append('{:g}'.format(depth) + 'm')
 
-                for pic in picinfos:
-                    id = pic[2]
-                    pic_inst = PicInfo.objects.get(pk=id)
-                    pic_list.append(pic_inst)
+                    # if lens := detailed_form.cleaned_data['lens_field']:
+                    #     abstract_list.append(str(lens) + 'X')
 
-                pics_pages_obj = Paginator(pic_list, pics_per_page)
+                    # if orth := detailed_form.cleaned_data['orth_field']:
+                    #     abstract_list.append(dict(PicInfo.ORTH_MODE).get(orth))
+
+                    if abstract_list:
+                        abstract_str = ' '.join(abstract_list)
+
+                        pics_dic = {}
+                        for pic in pics_queryset:
+                            pics_dic[pic.id] = pic.get_clean_name(
+                                PicInfo.PARTIAL_FIELDS)
+
+                        all_ratios = process.extract(
+                            abstract_str, pics_dic, scorer=fuzz.token_set_ratio, limit=10000)
+                        highest_ratio = all_ratios[0][1]
+                        messages.info(request, 'highest ratio:' +
+                                      str(highest_ratio))
+
+                        if highest_ratio >= minimum_match_ratio:
+                            picinfos = [
+                                ratio for ratio in all_ratios if ratio[1] == highest_ratio]
+                            pics_queryset = pics_queryset.filter(
+                                pk__in=[pic[2] for pic in picinfos])
+                        else:
+                            pics_queryset = []
+
+                pics_pages_obj = Paginator(pics_queryset, pics_per_page)
                 pics_page_obj = pics_pages_obj.get_page(page_num)
 
         return render(request, 'index.html', {'pics': pics_page_obj, 'normal_form': normal_form, 'detailed_form': detailed_form, 'form_type': form_type, 'query_url_preffix': query_url_preffix})
