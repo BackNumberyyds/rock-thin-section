@@ -110,8 +110,8 @@ def index(request):
                         all_ratios = process.extract(
                             abstract_str, pics_dic, scorer=fuzz.token_set_ratio, limit=10000)
                         highest_ratio = all_ratios[0][1]
-                        messages.info(request, 'highest ratio:' +
-                                      str(highest_ratio))
+                        # messages.info(request, 'highest ratio:' +
+                        #               str(highest_ratio))
 
                         if highest_ratio >= minimum_match_ratio:
                             picinfos = [
