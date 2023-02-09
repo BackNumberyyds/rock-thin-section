@@ -10,7 +10,7 @@ from .forms import FileFieldForm, NormalSerchForm, DetailedSearchForm
 from .models import PicInfo, Mine, Region
 from fuzzywuzzy import fuzz, process
 
-minimum_match_ratio = 26
+minimum_match_ratio = 50
 depth_query_tolerance = 5
 lens_query_tolerance = 1
 
