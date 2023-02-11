@@ -8,6 +8,7 @@
     <link rel="icon" href="{% static 'icon/favicon.ico' %}">
     <link rel="stylesheet" href="{% static 'bootstrap_custom/css/bootstrap_custom.css' %}">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    {% block static %}{% endblock %}
     <title>{% block title %}{% endblock %}·西部岩石薄片检索系统</title>
 </head>
 
@@ -70,6 +71,7 @@
     </footer>
 
     <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    {% block script %}{% endblock%}
 
 </body>
 
