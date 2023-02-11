@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import QuerySet
 from django.views.generic.edit import FormView
+from django.views import generic
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
@@ -192,10 +193,7 @@ class FileFieldFormView(SuperUserRequiredMixin, FormView):
             return self.form_invalid(form)
 
 
-def search_rocks(request):
-    if request.method == 'POST':
-        pass
-    else:
-        normal_form = NormalSerchForm()
-        detailed_form = DetailedSearchForm()
-    return render(request, )
+class RockSectionDetailView(generic.DetailView):
+    model = PicInfo
+    template_name = 'rock_detail.html'
+    context_object_name = 'pic'

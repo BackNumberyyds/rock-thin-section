@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 import os
 
 
@@ -54,3 +55,10 @@ class PicInfo(models.Model):
             return ' '.join([str(self.mine_num.region), self.mine_num.name, "{:g}".format(self.depth) + 'm', str(self.lens_mul) + 'X', dict(self.ORTH_MODE).get(self.orth)])
         else:
             return ' '.join([str(self.mine_num.region), self.mine_num.name])
+
+    @property
+    def get_orth(self):
+        return dict(self.ORTH_MODE).get(self.orth)
+
+    def get_absolute_url(self):
+        return reverse('rock:rock_detail', args=[str(self.id)])

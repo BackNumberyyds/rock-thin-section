@@ -1,0 +1,53 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<div class="container-fluid overflow-hidden">
+    <div class="row g-5 py-4 bg-light">
+        <div class="col-md-7 col-lg-8">
+            <img class="img-fluid rounded" src="{{ pic.image.url }}">
+        </div>
+        <div class="col-md-5 col-lg-4">
+            <h4 class="d-flex justify-content-between align-items-center mb-3">
+                <span class="text-primary">薄片详情</span>
+            </h4>
+            <ul class="list-group list-group-flush mb-3 rounded">
+                <li class="list-group-item d-flex justify-content-between lh-sm">
+                    <div>
+                        <h6 class="my-0">地区</h6>
+                        <small class="text-muted">region</small>
+                    </div>
+                    <span class="text-muted">{{ pic.mine_num.region }}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between lh-sm">
+                    <div>
+                        <h6 class="my-0">井号</h6>
+                        <small class="text-muted">well number</small>
+                    </div>
+                    <span class="text-muted">{{ pic.mine_num.name }}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between lh-sm">
+                    <div>
+                        <h6 class="my-0">井深</h6>
+                        <small class="text-muted">well depth</small>
+                    </div>
+                    <span class="text-muted">{{ pic.depth }}m</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between lh-sm">
+                    <div>
+                        <h6 class="my-0">物镜倍数</h6>
+                        <small class="text-muted">objective multiple</small>
+                    </div>
+                    <span class="text-muted">{{ pic.lens_mul }}X</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between lh-sm">
+                    <div>
+                        <h6 class="my-0">正交偏光</h6>
+                        <small class="text-muted">orthogonality</small>
+                    </div>
+                    <span class="text-muted">{{ pic.get_orth }}</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
