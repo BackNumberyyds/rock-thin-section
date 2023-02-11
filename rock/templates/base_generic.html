@@ -5,9 +5,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     {% load static %}
+    <link rel="icon" href="{% static 'icon/favicon.ico' %}">
     <link rel="stylesheet" href="{% static 'bootstrap_custom/css/bootstrap_custom.css' %}">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <title></title>
+    <title>{% block title %}{% endblock %}·西部岩石薄片检索系统</title>
 </head>
 
 <body>
