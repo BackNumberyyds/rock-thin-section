@@ -27,6 +27,7 @@ class PicInfo(models.Model):
         ('o', '正交'),
         ('p', '单偏'),
     )
+    LENS_MUL = [4, 10]
 
     FULL_FIELDS = 1
     PARTIAL_FIELDS = 2

@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import QuerySet
 from django.views.generic.edit import FormView
-from django.views import generic
+from django.views import generic, View
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
@@ -197,3 +197,31 @@ class RockSectionDetailView(generic.DetailView):
     model = PicInfo
     template_name = 'rock_detail.html'
     context_object_name = 'pic'
+
+
+class AllPhtotsView(View):
+    def get(self, request, *args, **kwargs):
+        regions = Region.objects.all()
+        mines = Mine.objects.all()
+        pics = PicInfo.objects.all()
+        content = {
+            'regions_all': regions,
+            'mines_all': mines,
+            'photos_all': pics,
+            'lens_all': PicInfo.LENS_MUL,
+            'orth_all': PicInfo.ORTH_MODE
+        }
+        return render(request, 'all_photos.html', context=content)
+
+    def post(self, request, *args, **kwargs):
+        regions = Region.objects.all()
+        mines = Mine.objects.all()
+        pics = PicInfo.objects.all()
+        content = {
+            'regions_all': regions,
+            'mines_all': mines,
+            'photos_all': pics,
+            'lens_all': PicInfo.LENS_MUL,
+            'orth_all': PicInfo.ORTH_MODE
+        }
+        return render(request, 'all_photos.html', context=content)
