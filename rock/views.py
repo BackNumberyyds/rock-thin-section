@@ -7,7 +7,7 @@ from django.views import generic, View
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
-from .forms import FileFieldForm, NormalSerchForm, DetailedSearchForm
+from .forms import FileFieldForm, NormalSerchForm, DetailedSearchForm, AllPhotosSearchForm
 from .models import PicInfo, Mine, Region
 from fuzzywuzzy import fuzz, process
 
@@ -200,28 +200,53 @@ class RockSectionDetailView(generic.DetailView):
 
 
 class AllPhtotsView(View):
-    def get(self, request, *args, **kwargs):
+    def render_form(self, search_form=None):
         regions = Region.objects.all()
         mines = Mine.objects.all()
         pics = PicInfo.objects.all()
+        if not search_form:
+            search_form = AllPhotosSearchForm()
         content = {
             'regions_all': regions,
             'mines_all': mines,
             'photos_all': pics,
             'lens_all': PicInfo.LENS_MUL,
-            'orth_all': PicInfo.ORTH_MODE
+            'orth_all': PicInfo.ORTH_MODE,
+            'search_form': search_form,
         }
+
+        return content
+
+    def get(self, request, *args, **kwargs):
+        content = self.render_form()
         return render(request, 'all_photos.html', context=content)
 
     def post(self, request, *args, **kwargs):
-        regions = Region.objects.all()
-        mines = Mine.objects.all()
-        pics = PicInfo.objects.all()
-        content = {
-            'regions_all': regions,
-            'mines_all': mines,
-            'photos_all': pics,
-            'lens_all': PicInfo.LENS_MUL,
-            'orth_all': PicInfo.ORTH_MODE
-        }
+        search_form = AllPhotosSearchForm(request.POST)
+        if search_form.is_valid():
+            messages.info(request, request.POST)
+            content = self.render_form(search_form)
+            pics_qs = PicInfo.objects.all()
+
+            # 井号筛选
+            if pics_qs.exists():
+                mines_list = request.POST['mines_selected'].split(',')
+                pics_qs = pics_qs.filter(mine_num__in=mines_list)
+
+            # 井深筛选
+            if pics_qs.exists():
+                # 全部井深
+                if 'is_all_depth' in request.POST:
+                    pass
+                # 范围筛选
+                elif 'is_range_search' in request.POST:
+                    pass
+                # 精准筛选
+                else:
+                    depth = search_form.cleaned_data['depth_low']
+                    pics_qs = pics_qs.filter(depth=depth)
+                    pass
+        else:
+            content = self.render_form()
+
         return render(request, 'all_photos.html', context=content)

@@ -21,12 +21,16 @@
                 <i class="fas fa-arrow-left"></i>
             </div>
         </div>
-        <form method="post">
+        <div class="container-fluid px-0" hidden>
+            <div class="alert alert-danger d-flex align-items-center p-2" id="alert_div" role="alert"></div>
+        </div>
+        <form method="post" onsubmit="return submitform()" id="search_form">
             {% csrf_token %}
             <ul class="list-unstyled ps-0">
                 <!-- 一级列表（标题）：地区/井号、井深、物镜倍数、正交偏光 -->
                 <li class="mb-1">
-                    <input class="form-check-input ms-0 mt-2 mid-checkbox" type="checkbox" value=""
+                    {{ search_form.mines_selected }}
+                    <input class="form-check-input ms-0 mt-2 mid-checkbox" type="checkbox" name="is_all_regions"
                         id="region_checkbox">
                     <button type="button" class="btn btn-toggle btn-toggle-1 align-items-center rounded collapsed"
                         data-bs-toggle="collapse" data-bs-target="#region_collapse" aria-expanded="true">
@@ -37,7 +41,8 @@
                         <ul class="btn-toggle-nav list-unstyled pb-1">
                             {% for region in regions_all %}
                             <div class="form-check">
-                                <input class="form-check-input ms-0 mt-2 mid-checkbox" type="checkbox">
+                                <input class="form-check-input ms-0 mt-2 mid-checkbox" type="checkbox"
+                                    name="region_with_all_mines" value="{{ region.pk }}">
                                 <button type="button"
                                     class="btn btn-toggle btn-toggle-2 align-items-center rounded collapsed"
                                     data-bs-toggle="collapse" data-bs-target="#region_id_{{ region.pk }}"
@@ -49,8 +54,8 @@
                                     <ul class="btn-toggle-nav list-unstyled pb-1">
                                         {% for mine in region.mine_set.all %}
                                         <div class="form-check">
-                                            <input class="form-check-input ms-0" type="checkbox" value=""
-                                                id="mine_id_{{ mine.pk }}">
+                                            <input class="form-check-input ms-0" type="checkbox" name="mines_checkboxs"
+                                                value="{{ mine.pk }}" id="mine_id_{{ mine.pk }}">
                                             <label class="form-check-label ms-2 small" for="mine_id_{{ mine.pk }}">
                                                 {{ mine.name }}
                                             </label>
@@ -64,8 +69,7 @@
                     </div>
                 </li>
                 <li class="mb-1">
-                    <input class="form-check-input ms-0 mt-2 mid-checkbox" type="checkbox" value="" id="region_checkbox"
-                        disabled>
+                    <input class="form-check-input ms-0 mt-2 mid-checkbox" type="checkbox" id="depth_checkbox" disabled>
                     <button type="button" class="btn btn-toggle btn-toggle-1 align-items-center rounded collapsed"
                         data-bs-toggle="collapse" data-bs-target="#depth_collapse" aria-expanded="true">
                         井深
@@ -75,14 +79,15 @@
                             <div class="row g-3 pt-2">
                                 <div class="col-6 ps-4">
                                     <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" role="switch" id="is_all_depth">
+                                        <input class="form-check-input" type="checkbox" role="switch" id="is_all_depth"
+                                            name="is_all_depth">
                                         <label class="form-check-label btn-toggle-2" for="is_all_depth">全部井深</label>
                                     </div>
                                 </div>
                                 <div class="col-6 ps-3">
                                     <div class="form-check form-switch">
                                         <input class="form-check-input" type="checkbox" role="switch"
-                                            id="is_range_search">
+                                            id="is_range_search" name="is_range_search">
                                         <label class="form-check-label btn-toggle-2" for="is_range_search">范围筛选</label>
                                     </div>
                                 </div>
@@ -90,14 +95,14 @@
                             <div class="row g-3 pt-2 mb-2">
                                 <div class="col-5 ps-3 pe-0">
                                     <div class="input-group input-group-sm">
-                                        <input class="form-control" name="depth_low" type="text">
+                                        {{ search_form.depth_low }}
                                         <span class="input-group-text">m</span>
                                     </div>
                                 </div>
                                 <div class="col-2 text-center px-0" style="font-weight:500; color: grey;">—</div>
                                 <div class="col-5 pe-3 ps-0">
                                     <div class="input-group input-group-sm">
-                                        <input class="form-control" name="depth_high" type="text" disabled>
+                                        {{ search_form.depth_high }}
                                         <span class="input-group-text">m</span>
                                     </div>
                                 </div>
@@ -106,8 +111,9 @@
                     </div>
                 </li>
                 <li class="mb-1">
-                    <input class="form-check-input ms-0 mt-2 mid-checkbox" type="checkbox" value=""
-                        id="region_checkbox">
+                    {{ search_form.lens_selected }}
+                    <input class="form-check-input ms-0 mt-2 mid-checkbox" type="checkbox" name="is_all_lens"
+                        id="is_all_lens">
                     <button type="button" class="btn btn-toggle btn-toggle-1 align-items-center rounded collapsed"
                         data-bs-toggle="collapse" data-bs-target="#lens_collapse" aria-expanded="true">
                         物镜倍数
@@ -116,7 +122,8 @@
                         <ul class="btn-toggle-nav list-unstyled pb-1 ps-4">
                             {% for len in lens_all %}
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="len_id_{{ len }}" value="{{ len }}">
+                                <input class="form-check-input" type="checkbox" id="len_id_{{ len }}"
+                                    name="lens_checkboxs" value="{{ len }}">
                                 <label class="form-check-label" for="len_id_{{ len }}">{{ len }}X</label>
                             </div>
                             {% endfor %}
@@ -124,8 +131,9 @@
                     </div>
                 </li>
                 <li class="mb-1">
-                    <input class="form-check-input ms-0 mt-2 mid-checkbox" type="checkbox" value=""
-                        id="region_checkbox">
+                    {{ search_form.orths_selected }}
+                    <input class="form-check-input ms-0 mt-2 mid-checkbox" type="checkbox" name="is_all_orths"
+                        id="is_all_orths">
                     <button type="button" class="btn btn-toggle btn-toggle-1 align-items-center rounded collapsed"
                         data-bs-toggle="collapse" data-bs-target="#orth_collapse" aria-expanded="true">
                         正交偏光
@@ -135,7 +143,7 @@
                             {% for orth in orth_all %}
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="checkbox" id="len_id_{{ orth.0 }}"
-                                    value="{{ orth.0 }}">
+                                    name="orths_checkboxs" value="{{ orth.0 }}">
                                 <label class="form-check-label" for="len_id_{{ orth.0 }}">{{ orth.1 }}</label>
                             </div>
                             {% endfor %}
@@ -143,7 +151,8 @@
                     </div>
                 </li>
             </ul>
-            <button type="submit" class="btn btn-primary filter-button">筛选</button>
+            <button type="button" onclick="submitform()" class="btn btn-primary filter-button">筛选</button>
+            <button type="submit" hidden id="search_form_submit_button"></button>
         </form>
     </div>
     <!-- End sidebar -->
@@ -159,6 +168,13 @@
             <i class="fas fa-align-left">
             </i> <span>Menu</span>
         </a>
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+                {% endfor %}
+        </ul>
+        {% endif %}
         <!-- <div style="height: 10000px;"></div> -->
 
         <!-- ... -->
@@ -176,4 +192,16 @@
 
 {% block script %}
 <script src="{% static 'js/all_photos.js' %}"></script>
+<!-- <script>
+    function submitform() {
+        mine_selected = document.getElementsByName('is_all_regions')[0];
+        if (mine_selected.checked) {
+
+        } else {
+            mines_selected = mine_selected.querySelectorAll('[name="mines_selected"]');
+            // alert(len(mines_selected));
+        }
+        alert('fesfes');
+    }
+</script> -->
 {% endblock%}

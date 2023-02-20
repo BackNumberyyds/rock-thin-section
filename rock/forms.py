@@ -27,3 +27,16 @@ class DetailedSearchForm(forms.Form):
         label='物镜倍数', required=False, widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm'}))
     orth_field = forms.ChoiceField(
         label='正交偏光', required=False, choices=ORTH_CHOICE, widget=forms.Select(attrs={'class': 'form-select form-select-sm'}))
+
+
+class AllPhotosSearchForm(forms.Form):
+    mines_selected = forms.CharField(
+        required=True, widget=forms.TextInput(attrs={'hidden': True}))
+    depth_low = forms.FloatField(
+        required=False, widget=forms.NumberInput(attrs={'class': 'form-control', 'min': 0, 'max': 1000, 'required': True}))
+    depth_high = forms.FloatField(
+        required=False, widget=forms.NumberInput(attrs={'class': 'form-control', 'min': 0, 'max': 1000, 'required': True, 'disabled': True}))
+    lens_selected = forms.CharField(
+        required=True, widget=forms.TextInput(attrs={'hidden': True}))
+    orths_selected = forms.CharField(
+        required=True, widget=forms.TextInput(attrs={'hidden': True}))
