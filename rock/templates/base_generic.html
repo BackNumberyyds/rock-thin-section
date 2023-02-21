@@ -27,8 +27,10 @@
                             {% if user.is_authenticated %}
                             <li><a href="{% url 'logout' %}" class="text-white">登出</a></li>
                             {% else %}
-                            <li><a href="{% url 'login' %}" class="text-white">登录</a></li>
-                            <li><a href="{% url 'logout' %}" class="text-white">注册</a></li>
+                            <!-- <li><a href="{% url 'login' %}" class="text-white">登录</a></li> -->
+                            <li><a href="#" class="text-white">登录</a></li>
+                            <!-- <li><a href="{% url 'logout' %}" class="text-white">注册</a></li> -->
+                            <li><a href="#" class="text-white">注册</a></li>
                             {% endif %}
                         </ul>
                     </div>

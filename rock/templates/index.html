@@ -60,12 +60,10 @@
                                 </label>
                             </div>
                             <div class="col-lg-4 col-sm-3 col-auto pe-1">
-                                {{ detailed_form.depth_field }}
-                            </div>
-                            <div class="col-auto px-0">
-                                <span class="form-text text-white">
-                                    m
-                                </span>
+                                <div class="input-group input-group-sm">
+                                    {{ detailed_form.depth_field }}
+                                    <span class="input-group-text">m</span>
+                                </div>
                             </div>
                         </div>
                         <div class="row mt-sm-3">
@@ -77,12 +75,10 @@
                                         </label>
                                     </div>
                                     <div class="col-sm-3 col-2 pe-1">
-                                        {{ detailed_form.lens_field }}
-                                    </div>
-                                    <div class="col-auto px-0">
-                                        <span class="form-text text-white">
-                                            X
-                                        </span>
+                                        <div class="input-group input-group-sm">
+                                            {{ detailed_form.lens_field }}
+                                            <span class="input-group-text">X</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -110,7 +106,9 @@
     </section>
     <div class="b-divider align-items-center text-center pt-3">
         {% if query_url_preffix %}
-        <div class="h5">共搜索到{{ pics.paginator.count }}个结果</div>
+        共搜索到{{ pics.paginator.count }}个结果
+        {% else %}
+        全部照片
         {% endif %}
     </div>
 
@@ -128,9 +126,9 @@
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-sm btn-outline-secondary"
                                         onclick="window.location.href='{{ pic.get_absolute_url }}'">
-                                        View
+                                        详情
                                     </button>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                                    <!-- <button type="button" class="btn btn-sm btn-outline-secondary">编辑</button> -->
                                 </div>
                                 <!-- <small class="text-muted">9 mins</small> -->
                             </div>
@@ -138,29 +136,6 @@
                     </div>
                 </div>
                 {% endfor %}
-                <!-- <div class="col">
-                        <div class="card shadow-sm">
-                            <svg class="bd-placeholder-img card-img-top" width="100%" height="225"
-                                xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail"
-                                preserveAspectRatio="xMidYMid slice" focusable="false">
-                                <title>Placeholder</title>
-                                <rect width="100%" height="100%" fill="#55595c" /><text x="50%" y="50%" fill="#eceeef"
-                                    dy=".3em">Thumbnail</text>
-                            </svg>
-
-                            <div class="card-body">
-                                <p class="card-text">This is a wider card with supporting text below as a natural
-                                    lead-in to additional content. This content is a little bit longer.</p>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                                        <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                                    </div>
-                                    <small class="text-muted">9 mins</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div> -->
             </div>
         </div>
         {% if pics.has_other_pages %}
@@ -197,7 +172,6 @@
     var normal_form = document.getElementById('normal_form')
     var detailed_form = document.getElementById('detailed_form')
     var init_form = "{{ form_type }}"
-    // alert('form type:' + init_form)
     if (init_form == "detailed_form") {
         detailed_form.style.removeProperty("display")
         toggleButton.textContent = "返回"
@@ -205,18 +179,6 @@
         normal_form.style.removeProperty("display")
         toggleButton.textContent = "进一步搜索"
     }
-
-    // window.onload = function () {
-    //     var init_form = "{{ form_type }}"
-    //     // alert('form type:' + init_form)
-    //     if (init_form == "detailed_form") {
-    //         normal_form.style.display = "none"
-    //         toggleButton.textContent = "返回"
-    //     } else {
-    //         detailed_form.style.display = "none"
-    //         toggleButton.textContent = "进一步搜索"
-    //     }
-    // }
 
     toggleButton.addEventListener("click", function () {
         if (detailed_form.style.display == "none") {

@@ -24,7 +24,7 @@
         <div class="container-fluid px-0" hidden>
             <div class="alert alert-danger d-flex align-items-center p-2" id="alert_div" role="alert"></div>
         </div>
-        <form method="post" onsubmit="return submitform()" id="search_form">
+        <form method="post" onsubmit="return submitform()" id="search_form" action="">
             {% csrf_token %}
             <ul class="list-unstyled ps-0">
                 <!-- 一级列表（标题）：地区/井号、井深、物镜倍数、正交偏光 -->
@@ -151,7 +151,10 @@
                     </div>
                 </li>
             </ul>
-            <button type="button" onclick="submitform()" class="btn btn-primary filter-button">筛选</button>
+            <div class="d-grid gap-2">
+                <button class="btn btn-primary" onclick="submitform()" type="button">筛选</button>
+            </div>
+            <!-- <button type="button" onclick="submitform()" class="btn btn-primary filter-button">筛选</button> -->
             <button type="submit" hidden id="search_form_submit_button"></button>
         </form>
     </div>
@@ -164,24 +167,88 @@
     <div class="content">
 
         <!-- open sidebar menu -->
-        <a class="btn btn-primary open-menu" href="#" role="button" id="open-menu">
-            <i class="fas fa-align-left">
-            </i> <span>Menu</span>
-        </a>
-        {% if messages %}
+        <div class="container-fluid">
+            <div class="row"
+                style="border-bottom-style: solid; border-color: rgb(202, 202, 202); background-color: rgb(235, 235, 235);">
+                <div class="col-auto px-0">
+                    <button class="btn btn-outline-success me-0" id="open-menu" type="button"
+                        style="border-radius: 0; border-style: none; border-right-style: solid; padding: 8px;">
+                        筛选薄片
+                    </button>
+                </div>
+                <div class="col d-flex align-items-center justify-content-center px-0">
+                    <p class="fw-semibold m-0 fs-5" style="color:rgb(87, 87, 87)">
+                        {% if is_search %}
+                        共搜索到{{ pics.paginator.count }}个结果
+                        {% else %}
+                        全部照片
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <!-- {% if messages %}
         <ul class="messages">
             {% for message in messages %}
             <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
                 {% endfor %}
         </ul>
-        {% endif %}
+        {% endif %} -->
         <!-- <div style="height: 10000px;"></div> -->
 
-        <!-- ... -->
+        <div class="album py-4 mt-3">
+            <div class="container">
 
-        <!-- here is the page's content (not shown here) -->
-
-        <!-- ... -->
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                    {% for pic in pics %}
+                    <div class="col">
+                        <div class="card shadow-sm">
+                            <img src="{{ pic.image.url }}">
+                            <div class="card-body">
+                                <p class="card-text text_center">{{ pic }}</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-outline-secondary"
+                                            onclick="window.location.href='{{ pic.get_absolute_url }}'">
+                                            详情
+                                        </button>
+                                        <!-- <button type="button" class="btn btn-sm btn-outline-secondary">编辑</button> -->
+                                    </div>
+                                    <!-- <small class="text-muted">9 mins</small> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% if pics.has_other_pages %}
+            <nav class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if not pics.has_previous %}
+                    <li class="page-item disabled">
+                        <a class="page-link">&laquo</a>
+                    </li>
+                    {% else %}
+                    <li><a class="page-link" href="?page={{ pics.previous_page_number }}">
+                            &laquo
+                        </a></li>
+                    {% endif %}
+                    <li class="page-item"><a class="page-link">{{ pics.number }} of {{ pics.paginator.num_pages }}</a>
+                    </li>
+                    {% if not pics.has_next %}
+                    <li class="page-item disabled">
+                        <a class="page-link">&raquo</a>
+                    </li>
+                    {% else %}
+                    <li><a class="page-link" href="?page={{ pics.next_page_number }}">
+                            &raquo
+                        </a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+        </div>
 
     </div>
     <!-- End content -->

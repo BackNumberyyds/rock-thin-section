@@ -22,9 +22,9 @@ class DetailedSearchForm(forms.Form):
     # depth_field = forms.FloatField(label='井深', required=False, widget=forms.TextInput(
     #     attrs={'class': 'form-control form-control-sm'}))
     depth_field = forms.FloatField(label='井深', required=False, widget=forms.NumberInput(
-        attrs={'class': 'form-control form-control-sm'}))
+        attrs={'class': 'form-control'}))
     lens_field = forms.IntegerField(
-        label='物镜倍数', required=False, widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm'}))
+        label='物镜倍数', required=False, widget=forms.NumberInput(attrs={'class': 'form-control'}))
     orth_field = forms.ChoiceField(
         label='正交偏光', required=False, choices=ORTH_CHOICE, widget=forms.Select(attrs={'class': 'form-select form-select-sm'}))
 

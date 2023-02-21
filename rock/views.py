@@ -219,18 +219,39 @@ class AllPhtotsView(View):
 
     def get(self, request, *args, **kwargs):
         content = self.render_form()
+
+        # 获得页号
+        page_num = 1
+        if 'page' in request.GET:
+            page_num = request.GET['page']
+
+        pics_qs = PicInfo.objects.all()
+        pics_pages_obj = Paginator(pics_qs, pics_per_page)
+        pics_page_obj = pics_pages_obj.get_page(page_num)
+        content['pics'] = pics_page_obj
+
         return render(request, 'all_photos.html', context=content)
 
     def post(self, request, *args, **kwargs):
         search_form = AllPhotosSearchForm(request.POST)
+
+        # 获得页号
+        page_num = 1
+        if 'page' in request.GET:
+            page_num = request.GET['page']
+
         if search_form.is_valid():
             messages.info(request, request.POST)
             content = self.render_form(search_form)
             pics_qs = PicInfo.objects.all()
 
+            # 标记请求类型为post
+            content['is_search'] = 'on'
+
             # 井号筛选
             if pics_qs.exists():
-                mines_list = request.POST['mines_selected'].split(',')
+                mines_list = search_form.cleaned_data['mines_selected'].split(
+                    ',')
                 pics_qs = pics_qs.filter(mine_num__in=mines_list)
 
             # 井深筛选
@@ -240,13 +261,37 @@ class AllPhtotsView(View):
                     pass
                 # 范围筛选
                 elif 'is_range_search' in request.POST:
+                    depth_low = search_form.cleaned_data['depth_low']
+                    depth_high = search_form.cleaned_data['depth_low']
+                    pics_qs = pics_qs.filter(
+                        depth__range=(depth_low, depth_high))
                     pass
                 # 精准筛选
                 else:
                     depth = search_form.cleaned_data['depth_low']
                     pics_qs = pics_qs.filter(depth=depth)
                     pass
+
+            # 物镜倍数筛选
+            if pics_qs.exists():
+                lens_list = search_form.cleaned_data['lens_selected'].split(
+                    ',')
+                pics_qs = pics_qs.filter(lens_mul__in=lens_list)
+
+            # 正交偏光筛选
+            if pics_qs.exists():
+                orths_list = search_form.cleaned_data['orths_selected'].split(
+                    ',')
+                pics_qs = pics_qs.filter(orth__in=orths_list)
+
+            pics_pages_obj = Paginator(pics_qs, pics_per_page)
+            pics_page_obj = pics_pages_obj.get_page(page_num)
+            content['pics'] = pics_page_obj
         else:
             content = self.render_form()
+            pics_qs = PicInfo.objects.all()
+            pics_pages_obj = Paginator(pics_qs, pics_per_page)
+            pics_page_obj = pics_pages_obj.get_page(page_num)
+            content['pics'] = pics_page_obj
 
         return render(request, 'all_photos.html', context=content)
