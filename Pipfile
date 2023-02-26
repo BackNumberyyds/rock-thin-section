@@ -10,6 +10,7 @@ pillow = "*"
 fuzzywuzzy = "*"
 python-levenshtein = "*"
 jieba = "*"
+djangorestframework = "*"
 
 [dev-packages]
 
