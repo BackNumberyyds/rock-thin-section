@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rock.apps.RockConfig'
+    'rock.apps.RockConfig',
+    'frontend.apps.FrontendConfig',
 ]
 
 MIDDLEWARE = [
