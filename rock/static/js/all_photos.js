@@ -1,28 +1,28 @@
 
 document.addEventListener("DOMContentLoaded", function (event) {
     // 表单数据回显
-    const mines_selected = document.getElementById('id_mines_selected');
-    const lens_selected = document.getElementById('id_lens_selected');
-    const orths_selected = document.getElementById('id_orths_selected');
-    var mines_selected_list = mines_selected.value.split(',');
-    var lens_selected_list = lens_selected.value.split(',');
-    var orths_selected_list = orths_selected.value.split(',');
+    // const mines_selected = document.getElementById('id_mines_selected');
+    // const lens_selected = document.getElementById('id_lens_selected');
+    // const orths_selected = document.getElementById('id_orths_selected');
+    // var mines_selected_list = mines_selected.value.split(',');
+    // var lens_selected_list = lens_selected.value.split(',');
+    // var orths_selected_list = orths_selected.value.split(',');
 
-    document.querySelectorAll('input[name="mines_checkboxs"]').forEach(mine => {
-        if (mines_selected_list.includes(mine.value)) {
-            mine.checked = true;
-        }
-    });
-    document.querySelectorAll('input[name="lens_checkboxs"]').forEach(len => {
-        if (lens_selected_list.includes(len.value)) {
-            len.checked = true;
-        }
-    });
-    document.querySelectorAll('input[name="orths_checkboxs"]').forEach(orth => {
-        if (orths_selected_list.includes(orth.value)) {
-            orth.checked = true;
-        }
-    });
+    // document.querySelectorAll('input[name="mines_checkboxs"]').forEach(mine => {
+    //     if (mines_selected_list.includes(mine.value)) {
+    //         mine.checked = true;
+    //     }
+    // });
+    // document.querySelectorAll('input[name="lens_checkboxs"]').forEach(len => {
+    //     if (lens_selected_list.includes(len.value)) {
+    //         len.checked = true;
+    //     }
+    // });
+    // document.querySelectorAll('input[name="orths_checkboxs"]').forEach(orth => {
+    //     if (orths_selected_list.includes(orth.value)) {
+    //         orth.checked = true;
+    //     }
+    // });
 
     const open = document.getElementById('open-menu');
     const close = document.getElementById('dismiss');

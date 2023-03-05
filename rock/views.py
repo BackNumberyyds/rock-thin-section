@@ -234,6 +234,7 @@ class AllPhtotsView(View):
 
     def post(self, request, *args, **kwargs):
         search_form = AllPhotosSearchForm(request.POST)
+        raise ValueError()
 
         # 获得页号
         page_num = 1
