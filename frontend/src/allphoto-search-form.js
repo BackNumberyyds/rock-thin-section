@@ -1,86 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import CheckboxTree from 'react-checkbox-tree';
 import 'react-checkbox-tree/lib/react-checkbox-tree.css';
 import Collapse from './collapse';
-
-const nodes = [{
-    value: 'diqu',
-    label: '地区',
-    children: [
-        {
-            value: 'zhunxi',
-            label: '准西'
-        },
-        {
-            value: 'zhunxibei',
-            label: '准西北',
-            children: [
-                {
-                    value: 'haqian217',
-                    label: '哈浅217井'
-                },
-                {
-                    value: 'haqian218',
-                    label: '哈浅218井'
-                },
-            ],
-        },
-    ],
-}];
-
-const data = {
-    regions: [{
-        value: 'diqu',
-        label: '地区',
-        children: [
-            {
-                value: 'zhunxi',
-                label: '准西'
-            },
-            {
-                value: 'zhunxibei',
-                label: '准西北',
-                children: [
-                    {
-                        value: 'haqian217',
-                        label: '哈浅217井'
-                    },
-                    {
-                        value: 'haqian218',
-                        label: '哈浅218井'
-                    },
-                ],
-            },
-        ],
-    }],
-    lens: [{
-        value: 'wujingbeishu',
-        label: '物镜倍数',
-        children: [
-            {
-                value: 4,
-                label: '4X'
-            },
-            {
-                value: 10,
-                label: '10X'
-            }]
-    }],
-    orths: [{
-        value: 'zhengjiaopianguang',
-        label: '正交偏光',
-        children: [
-            {
-                value: 'o',
-                label: '正交'
-            },
-            {
-                value: 'p',
-                label: '单偏'
-            }
-        ]
-    }]
-}
 
 class DepthInputField extends React.Component {
     constructor(props) {
@@ -134,37 +55,6 @@ class DepthInputField extends React.Component {
                     </div>
                 </ul>
             </Collapse>
-            // <div className="react-checkbox-tree rct-icons-fa4">
-            //     <div>
-            //         <Collapse header="Click to toggle">
-            //             <p>Some content here...</p>
-            //         </Collapse>
-            //     </div>
-            //     <ol>
-            //         <li className="rct-node rct-node-parent rct-node-expanded">
-            //             <span className="rct-text">
-            //                 <button
-            //                     data-bs-toggle="collapse"
-            //                     href="#collapseExample"
-            //                     type="button"
-            //                     className="rct-collapse rct-collapse-btn"
-            //                     onClick={this.handleCollapse}
-            //                 >
-            //                     <span className={"rct-icon " + (this.state.collapsed ? "rct-icon-expand-close" : "rct-icon-expand-open")}></span>
-            //                 </button>
-            //                 <label for="rct-V5GdGs-iIg5AE27tlhlWf-diqu">
-            //                     <input id="rct-V5GdGs-iIg5AE27tlhlWf-diqu" type="checkbox" />
-            //                     <span aria-checked="false" aria-disabled="false" className="rct-checkbox" role="checkbox" tabindex="0">
-            //                         <span className="rct-icon rct-icon-uncheck"></span>
-            //                     </span>
-            //                     <span className="rct-node-icon" />
-            //                     <span className="rct-title">地区</span>
-            //                 </label>
-            //             </span>
-            //             <div id="collapseExample" className="collapse">123</div>
-            //         </li>
-            //     </ol >
-            // </div >
         );
     }
 }
@@ -178,9 +68,36 @@ class SearchForm extends React.Component {
             orths_checked: [],
             mines_expanded: data.regions.map(n => n.value),
             lens_expanded: data.lens.map(n => n.value),
-            orths_expanded: data.orths.map(n => n.value)
+            orths_expanded: data.orths.map(n => n.value),
+            nodesData: null,
+            isLoading: true,
+            error: null,
         };
         this.submitform = this.submitform.bind(this);
+    }
+
+    componentDidMount() {
+        // 设置状态为正在加载
+        this.setState({ isLoading: true });
+
+        // 发起 API 请求
+        fetch('/api/allphotoform-datas/')
+            .then(response => {
+                // 检查响应是否成功
+                if (!response.ok) {
+                    throw new Error(`HTTP error ${response.status}`);
+                }
+                // 将响应解析为 JavaScript 对象
+                return response.json();
+            })
+            .then(data => {
+                // 将数据保存在组件状态中
+                this.setState({ nodesData: data, isLoading: false });
+            })
+            .catch(error => {
+                // 将错误保存在组件状态中
+                this.setState({ error, isLoading: false });
+            });
     }
 
     submitform() {
@@ -188,69 +105,38 @@ class SearchForm extends React.Component {
     }
 
     render() {
-        console.log(this.state.mines_checked);
-        console.log(this.state.lens_checked);
-        return (
-            <form method="post" action="">
-                <input type="hidden" name="csrfmiddlewaretoken" value={window.csrf_token} />
-                <CheckboxTree
-                    nodes={data.regions}
-                    checked={this.state.mines_checked}
-                    expanded={this.state.mines_expanded}
-                    onCheck={checked => this.setState({ mines_checked: checked })}
-                    onExpand={mines_expanded => this.setState({ mines_expanded })}
-                />
-                <DepthInputField />
-                <CheckboxTree
-                    nodes={data.lens}
-                    checked={this.state.lens_checked}
-                    expanded={this.state.lens_expanded}
-                    onCheck={checked => this.setState({ lens_checked: checked })}
-                    onExpand={lens_expanded => this.setState({ lens_expanded })}
-                />
-                <CheckboxTree
-                    nodes={data.orths}
-                    checked={this.state.orths_checked}
-                    expanded={this.state.orths_expanded}
-                    onCheck={checked => this.setState({ orths_checked: checked })}
-                    onExpand={orths_expanded => this.setState({ orths_expanded })}
-                />
-                <div className="d-grid gap-2">
-                    <button className="btn btn-primary" onClick={this.submitform} type="button">筛选</button>
-                </div>
-            </form>
-        );
-    }
-}
-
-class MyForm extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            checked: [],
-        };
-    }
-
-    handleSubmit = (event) => {
-        event.preventDefault();
-        console.log('Checked items:', this.state.checked);
-        // 在这里处理表单提交逻辑
-    };
-
-    render() {
-        return (
-            <form onSubmit={this.handleSubmit}>
-                <label>My Checkbox Tree</label>
-                <CheckboxTree
-                    nodes={nodes}
-                    checked={this.state.checked}
-                    expanded={this.state.expanded}
-                    onCheck={checked => this.setState({ checked })}
-                    onExpand={expanded => this.setState({ expanded })}
-                />
-                <button type="submit">Submit</button>
-            </form>
-        );
+        if (!this.state.isLoading) {
+            return (
+                <form method="post" action="">
+                    <input type="hidden" name="csrfmiddlewaretoken" value={window.csrf_token} />
+                    <CheckboxTree
+                        nodes={this.state.nodesData.regions}
+                        checked={this.state.mines_checked}
+                        expanded={this.state.mines_expanded}
+                        onCheck={checked => this.setState({ mines_checked: checked })}
+                        onExpand={mines_expanded => this.setState({ mines_expanded })}
+                    />
+                    <DepthInputField />
+                    <CheckboxTree
+                        nodes={this.state.nodesData.lens}
+                        checked={this.state.lens_checked}
+                        expanded={this.state.lens_expanded}
+                        onCheck={checked => this.setState({ lens_checked: checked })}
+                        onExpand={lens_expanded => this.setState({ lens_expanded })}
+                    />
+                    <CheckboxTree
+                        nodes={this.state.nodesData.orths}
+                        checked={this.state.orths_checked}
+                        expanded={this.state.orths_expanded}
+                        onCheck={checked => this.setState({ orths_checked: checked })}
+                        onExpand={orths_expanded => this.setState({ orths_expanded })}
+                    />
+                    <div className="d-grid gap-2">
+                        <button className="btn btn-primary" onClick={this.submitform} type="button">筛选</button>
+                    </div>
+                </form>
+            );
+        }
     }
 }
 
