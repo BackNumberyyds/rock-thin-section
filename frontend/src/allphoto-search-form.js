@@ -7,17 +7,14 @@ class DepthInputField extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            collapsed: true
+            collapsed: true,
+            isAllDepth: false,
+            isRangeSearch: false
         }
-        this.handleCollapse = this.handleCollapse.bind(this);
     }
 
-    handleCollapse() {
-        this.setState(function (state, props) {
-            return {
-                collapsed: !state.collapsed
-            };
-        });
+    toggleAllDepth = () => {
+        this.setState(() => { isAllDepth: !this.state.isAllDepth });
     }
 
     render() {
@@ -27,7 +24,7 @@ class DepthInputField extends React.Component {
                     <div className="row g-3 pt-2">
                         <div className="col-6 ps-4">
                             <div className="form-check form-switch">
-                                <input className="form-check-input" type="checkbox" role="switch" id="is_all_depth" name="is_all_depth" />
+                                <input className="form-check-input" type="checkbox" role="switch" id="is_all_depth" name="is_all_depth" onChange={this.toggleAllDepth} />
                                 <label className="form-check-label btn-toggle-2" for="is_all_depth">全部井深</label>
                             </div>
                         </div>
@@ -59,6 +56,16 @@ class DepthInputField extends React.Component {
     }
 }
 
+const getNodeIds = (nodes) => {
+    let ids = [];
+
+    nodes?.forEach(({ value, children }) => {
+        ids = [...ids, value, ...getNodeIds(children)];
+    });
+
+    return ids;
+};
+
 class SearchForm extends React.Component {
     constructor(props) {
         super(props);
@@ -66,9 +73,9 @@ class SearchForm extends React.Component {
             mines_checked: [],
             lens_checked: [],
             orths_checked: [],
-            mines_expanded: data.regions.map(n => n.value),
-            lens_expanded: data.lens.map(n => n.value),
-            orths_expanded: data.orths.map(n => n.value),
+            mines_expanded: [],
+            lens_expanded: [],
+            orths_expanded: [],
             nodesData: null,
             isLoading: true,
             error: null,
@@ -76,28 +83,23 @@ class SearchForm extends React.Component {
         this.submitform = this.submitform.bind(this);
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         // 设置状态为正在加载
         this.setState({ isLoading: true });
+        try {
+            const response = await fetch("/api/allphotoform-datas/");
+            const data = await response.json();
 
-        // 发起 API 请求
-        fetch('/api/allphotoform-datas/')
-            .then(response => {
-                // 检查响应是否成功
-                if (!response.ok) {
-                    throw new Error(`HTTP error ${response.status}`);
-                }
-                // 将响应解析为 JavaScript 对象
-                return response.json();
-            })
-            .then(data => {
-                // 将数据保存在组件状态中
-                this.setState({ nodesData: data, isLoading: false });
-            })
-            .catch(error => {
-                // 将错误保存在组件状态中
-                this.setState({ error, isLoading: false });
+            this.setState({
+                nodesData: data,
+                isLoading: false,
+                mines_expanded: getNodeIds(data.regions),
+                lens_expanded: getNodeIds(data.lens),
+                orths_expanded: getNodeIds(data.orths)
             });
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     submitform() {

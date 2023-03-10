@@ -11,6 +11,7 @@ fuzzywuzzy = "*"
 python-levenshtein = "*"
 jieba = "*"
 djangorestframework = "*"
+xlrd = "*"
 
 [dev-packages]
 
