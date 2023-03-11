@@ -12,6 +12,8 @@ python-levenshtein = "*"
 jieba = "*"
 djangorestframework = "*"
 xlrd = "*"
+pandas = "*"
+openpyxl = "*"
 
 [dev-packages]
 
