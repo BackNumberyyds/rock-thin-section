@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.contrib import sessions
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -67,5 +68,11 @@ class AllPhotoFormData(APIView):
 
             }]
         }
+
+        # 存在查询值，则传入前端
+        if (request.session['form_data']):
+            ret['form_data'] = request.session['form_data']
+
+        print(ret)
 
         return Response(ret)

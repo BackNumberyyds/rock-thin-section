@@ -234,7 +234,7 @@ class AllPhtotsView(View):
 
     def post(self, request, *args, **kwargs):
         search_form = AllPhotosSearchForm(request.POST)
-        raise ValueError()
+        # raise ValueError()
 
         # 获得页号
         page_num = 1
@@ -245,6 +245,9 @@ class AllPhtotsView(View):
             messages.info(request, request.POST)
             content = self.render_form(search_form)
             pics_qs = PicInfo.objects.all()
+
+            # 将表单数据存储到 session 中
+            request.session['form_data'] = request.POST
 
             # 标记请求类型为post
             content['is_search'] = 'on'
@@ -263,7 +266,7 @@ class AllPhtotsView(View):
                 # 范围筛选
                 elif 'is_range_search' in request.POST:
                     depth_low = search_form.cleaned_data['depth_low']
-                    depth_high = search_form.cleaned_data['depth_low']
+                    depth_high = search_form.cleaned_data['depth_high']
                     pics_qs = pics_qs.filter(
                         depth__range=(depth_low, depth_high))
                     pass
