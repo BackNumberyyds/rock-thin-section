@@ -170,8 +170,12 @@ class FileFieldFormView(SuperUserRequiredMixin, FormView):
                         picInfo_instance = PicInfo(
                             mine_num=mine, depth=depth, lens_mul=lens, orth=orth, pic_num=pic_num, image=f)
                     elif len(img_infos) == 7:
-                        depth = float(img_infos[2])
-                        remarks = int(img_infos[3][:-1])
+                        if img_infos[2].endswith('m'):
+                            depth = float(img_infos[2][:-1])
+                            remarks = int(img_infos[3])
+                        elif img_infos[2].endswith('m'):
+                            depth = float(img_infos[2])
+                            remarks = int(img_infos[3][:-1])
                         if PicInfo.objects.filter(mine_num=mine, depth=depth, lens_mul=lens, orth=orth, pic_num=pic_num, remarks=remarks).exists():
                             raise NameRepeatError
                         picInfo_instance = PicInfo(
