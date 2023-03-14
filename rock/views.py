@@ -173,7 +173,7 @@ class FileFieldFormView(SuperUserRequiredMixin, FormView):
                         if img_infos[2].endswith('m'):
                             depth = float(img_infos[2][:-1])
                             remarks = int(img_infos[3])
-                        elif img_infos[2].endswith('m'):
+                        elif img_infos[3].endswith('m'):
                             depth = float(img_infos[2])
                             remarks = int(img_infos[3][:-1])
                         if PicInfo.objects.filter(mine_num=mine, depth=depth, lens_mul=lens, orth=orth, pic_num=pic_num, remarks=remarks).exists():
