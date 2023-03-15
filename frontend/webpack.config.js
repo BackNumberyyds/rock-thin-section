@@ -1,12 +1,16 @@
 const path = require('path');
 
-module.exports = {
-    entry: './src/index.js',
+const isDev = process.env.NODE_ENV === 'development';
+
+const config = {
+    entry: {
+        main: './src/index.js',
+        minedetail: './src/minedetail.js'
+    },
     output: {
         filename: '[name].js',
         path: path.resolve(__dirname, 'static', 'frontend')
     },
-    mode: 'production',
     module: {
         rules: [
             {
@@ -23,3 +27,11 @@ module.exports = {
         ],
     },
 };
+
+if (isDev) {
+    config.mode = 'development';
+} else {
+    config.mode = 'production';
+}
+
+module.exports = config;
