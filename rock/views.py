@@ -203,6 +203,12 @@ class RockSectionDetailView(generic.DetailView):
     context_object_name = 'pic'
 
 
+class MineDetailView(generic.DeleteView):
+    model = Mine
+    template_name = 'mine_detail.html'
+    context_object_name = 'mine'
+
+
 class AllPhtotsView(View):
     def render_form(self, search_form=None):
         regions = Region.objects.all()
