@@ -63,3 +63,67 @@ class PicInfo(models.Model):
 
     def get_absolute_url(self):
         return reverse('rock:rock_detail', args=[str(self.id)])
+
+
+# 界
+class Erathem(models.Model):
+    name = models.CharField(max_length=30)
+
+    def __str__(self):
+        return self.name
+
+
+# 系
+class System(models.Model):
+    name = models.CharField(max_length=30)
+
+    def __str__(self):
+        return self.name
+
+
+# 统
+class Series(models.Model):
+    name = models.CharField(max_length=30)
+
+    def __str__(self):
+        return self.name
+
+
+# 组
+class Formation(models.Model):
+    name = models.CharField(max_length=30)
+
+    def __str__(self):
+        return self.name
+
+
+# 段
+class Member(models.Model):
+    name = models.CharField(max_length=30)
+
+    def __str__(self):
+        return self.name
+
+
+# 地层信息
+class LithostratigraphicInfo(models.Model):
+    # 井号
+    mine_num = models.ForeignKey(Mine, on_delete=models.CASCADE, null=True)
+
+    erathem = models.ForeignKey(
+        Erathem, on_delete=models.SET_NULL, null=True)
+    system = models.ForeignKey(
+        System, on_delete=models.SET_NULL, null=True)
+    series = models.ForeignKey(
+        Series, on_delete=models.SET_NULL, null=True)
+    formation = models.ForeignKey(
+        Formation, on_delete=models.SET_NULL, null=True)
+    member = models.ForeignKey(
+        Member, on_delete=models.SET_NULL, null=True)
+
+    lower_border = models.FloatField(null=False)
+    higher_border = models.FloatField(null=False)
+    thickness = models.FloatField(null=False)
+
+    def __str__(self):
+        return self.mine_num + self.lower_border
