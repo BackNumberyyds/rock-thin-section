@@ -74,7 +74,6 @@ class Command(BaseCommand):
                             except Exception:
                                 self.stdout.write(Exception)
 
-                            pic.save()
                         self.stdout.write(self.style.SUCCESS(
                             f'Successfully loaded data from {file_name}'))
                     except Mine.DoesNotExist:
