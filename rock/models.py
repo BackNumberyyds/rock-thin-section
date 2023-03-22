@@ -108,7 +108,7 @@ class Member(models.Model):
 # 地层信息
 class LithostratigraphicInfo(models.Model):
     # 井号
-    mine_num = models.ForeignKey(Mine, on_delete=models.CASCADE, null=True)
+    mine_num = models.ForeignKey(Mine, on_delete=models.CASCADE, null=False)
 
     erathem = models.ForeignKey(
         Erathem, on_delete=models.SET_NULL, null=True)
@@ -126,4 +126,4 @@ class LithostratigraphicInfo(models.Model):
     thickness = models.FloatField(null=False)
 
     def __str__(self):
-        return self.mine_num + self.lower_border
+        return f'{self.mine_num}-{self.lower_border}'

@@ -1,6 +1,6 @@
+from django.apps import apps
 from django.contrib import admin
-from .models import Region, Mine, PicInfo
 
-admin.site.register(Region)
-admin.site.register(Mine)
-admin.site.register(PicInfo)
+app_models = apps.get_app_config('rock').get_models()
+for model in app_models:
+    admin.site.register(model)
