@@ -17,6 +17,14 @@ class Mine(models.Model):
     def __str__(self):
         return '%s-%s' % (self.region, self.name)
 
+    @property
+    def max_depth(self):
+        return LithostratigraphicInfo.objects.filter(mine_num=self).order_by('-lower_border').first().lower_border
+
+    @property
+    def pic_num(self):
+        return PicInfo.objects.filter(mine_num=self).count()
+
 
 def get_upload_to(instance, filename):
     return os.path.join('img/rocks/', str(instance.mine_num.region), instance.mine_num.name, filename)

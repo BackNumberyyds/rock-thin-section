@@ -144,3 +144,4 @@ GitHub.sublime-settings
 .history
 .DS_Store
 frontend/package-lock.json
+frontend/static/frontend
