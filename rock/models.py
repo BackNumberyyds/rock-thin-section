@@ -115,6 +115,8 @@ class Member(models.Model):
 
 # 地层信息
 class LithostratigraphicInfo(models.Model):
+    CATEGORY_NAMES = [('erathem', '界'), ('system', '系'),
+                      ('series', '统'), ('formation', '组'), ('member', '段')]
     # 井号
     mine_num = models.ForeignKey(Mine, on_delete=models.CASCADE, null=False)
 
