@@ -33,6 +33,13 @@ class LayerChart extends React.Component {
                 },
                 legend: {
                     position: 'right'
+                },
+                tooltip: {
+                    y: {
+                        formatter: function (value, seriesIndex) {
+                            return Number(value).toFixed(2).replace(/\.?0+$/, '') + 'm';
+                        }
+                    }
                 }
             },
         };
