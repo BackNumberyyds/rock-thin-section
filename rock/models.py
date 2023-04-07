@@ -143,14 +143,21 @@ class LithostratigraphicInfo(models.Model):
 class RockSampleName(models.Model):
     name = models.CharField(max_length=20)
 
+    def __str__(self):
+        return self.name
+
 
 # 样本结构
 class RockSampleStructure(models.Model):
     name = models.CharField(max_length=20)
 
+    def __str__(self):
+        return self.name
+
 
 # 岩矿样本信息
 class RockSample(models.Model):
+    mine_num = models.ForeignKey(Mine, on_delete=models.CASCADE, null=False)
     analysis_number = models.CharField(max_length=10, null=False)
     number = models.CharField(max_length=15, null=False)
     depth = models.FloatField(null=False)
@@ -160,3 +167,6 @@ class RockSample(models.Model):
         RockSampleStructure, on_delete=models.SET_NULL, null=True)
     description = models.TextField(max_length=100)
     remarks = models.CharField(max_length=30, null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.mine_num}-{self.analysis_number}'
