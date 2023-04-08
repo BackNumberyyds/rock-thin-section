@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
-from rock.models import Mine, LithostratigraphicInfo, Erathem, System, Series, Formation, Member, RockSampleName
+from rock.models import Mine, LithostratigraphicInfo, Erathem, System, Series, Formation, Member, RockSampleName, RockSampleStructure
 import pandas as pd
 import numpy as np
 import os
@@ -70,7 +70,31 @@ class Command(BaseCommand):
                         self.stdout.write(self.style.ERROR(
                             f'{file_name}\t{e}'))
         elif options['structure']:
-            pass
+            for file_name in os.listdir(data_dir):
+                if file_name.endswith('.xls') or file_name.endswith('.xlsx'):
+                    try:
+                        file_path = os.path.join(data_dir, file_name)
+                        excel_file = pd.ExcelFile(file_path)
+                        cnt = 0
+
+                        for s in range(1, 3):
+                            if self.SHEET_NAMES[s] in excel_file.sheet_names:
+                                sheet = pd.read_excel(
+                                    excel_file, sheet_name=self.SHEET_NAMES[s], header=None)
+                                for i in range(5, sheet.shape[0]):
+                                    name = sheet[4][i]
+                                    if not pd.isna(name) and not '镜' in name and not '结构、构造' in name and not RockSampleStructure.objects.filter(name=name).exists():
+                                        print(name)
+                                        inst = RockSampleStructure(name=name)
+                                        inst.save()
+                                        cnt += 1
+
+                        self.stdout.write(self.style.SUCCESS(
+                            f'Successfully loaded {cnt} items from {file_name}'))
+
+                    except Exception as e:
+                        self.stdout.write(self.style.ERROR(
+                            f'{file_name}\t{e}'))
         else:
             for file_name in os.listdir(data_dir):
                 if file_name.endswith('.xls') or file_name.endswith('.xlsx'):
