@@ -157,6 +157,13 @@ class RockSampleStructure(models.Model):
 
 # 岩矿样本信息
 class RockSample(models.Model):
+    METHOD = (
+        (0, '碎屑岩'),
+        (1, '岩浆岩'),
+        (2, '井壁取心')
+    )
+
+    method = models.IntegerField(choices=METHOD, null=False, default=0)
     mine_num = models.ForeignKey(Mine, on_delete=models.CASCADE, null=False)
     analysis_number = models.CharField(max_length=10, null=False)
     number = models.CharField(max_length=15, null=False)
