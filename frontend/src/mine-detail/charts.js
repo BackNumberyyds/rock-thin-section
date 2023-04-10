@@ -1,13 +1,12 @@
 import React, { Component } from "react";
 import ReactApexChart from "react-apexcharts";
 
-class LayerChart extends React.Component {
+export class LayerChart extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            isLoading: true,
-            series: [],
+            series: props.data,
             options: {
                 chart: {
                     height: 350,
@@ -45,21 +44,6 @@ class LayerChart extends React.Component {
         };
     }
 
-    async componentDidMount() {
-        // 设置状态为正在加载
-        this.setState({ isLoading: true });
-        try {
-            const response = await fetch("/api" + window.location.pathname);
-            const data = await response.json();
-            this.setState({
-                series: data,
-                isLoading: false
-            });
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
     render() {
         return (
             <div id="chart">
@@ -69,4 +53,56 @@ class LayerChart extends React.Component {
     }
 }
 
-export default LayerChart;
+// 定义数据和选项
+const data = [
+    {
+        name: 'Sample A',
+        data: [[10, 5], [20, 10], [30, 15], [40, 20]]
+    },
+    {
+        name: 'Sample B',
+        data: [[10, 15], [20, 20], [30, 25], [40, 30]]
+    }
+]
+
+var options = {
+    chart: {
+        type: 'scatter'
+    },
+    series: [
+        {
+            name: 'Sales',
+            data: [
+                { x: 'North', y: 30 },
+                { x: 'South', y: 40 },
+                { x: 'East', y: 35 },
+                { x: 'West', y: 50 },
+                { x: 'Central', y: 49 }
+            ]
+        },
+        {
+            name: 'Sales',
+            data: [
+                { x: 'North', y: 30 },
+                { x: 'South', y: 40 },
+                { x: 'East', y: 35 },
+                { x: 'West', y: 50 },
+                { x: 'Central', y: 49 }
+            ]
+        }
+    ],
+    xaxis: {
+        type: 'category',
+        categories: ['North', 'South', 'East', 'West', 'Central']
+    }
+}
+
+export class SampleNameChart extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        return <ReactApexChart options={options} series={options.series} type="scatter" height={350} />
+    }
+}

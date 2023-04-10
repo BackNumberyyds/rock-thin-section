@@ -3,7 +3,7 @@ from django.contrib import sessions
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rock.models import PicInfo, Region, Mine, LithostratigraphicInfo
+from rock.models import PicInfo, Region, Mine, LithostratigraphicInfo, RockSample
 
 
 class AllPhotoFormData(APIView):
@@ -79,10 +79,14 @@ class AllPhotoFormData(APIView):
 class MineDetailData(APIView):
     def get(self, request, pk):
         mine_inst = Mine.objects.get(pk=pk)
+        ret = {
+            'layer_data': [],
+            'sample_name_data': []
+        }
+
+        # 地质分层数据
         layer_qs = LithostratigraphicInfo.objects.filter(
             mine_num=mine_inst).order_by('higher_border')
-        ret = []
-
         for category in LithostratigraphicInfo.CATEGORY_NAMES:
             layer_cache = []
             for layer in layer_qs:
@@ -108,7 +112,7 @@ class MineDetailData(APIView):
 
                 for layer in merger:
                     mark = False
-                    for dic in ret:
+                    for dic in ret['layer_data']:
                         if dic['name'] == layer[0]:
                             mark = True
                             dic['data'].append({
@@ -117,12 +121,14 @@ class MineDetailData(APIView):
                             })
                             break
                     if not mark:
-                        ret.append({
+                        ret['layer_data'].append({
                             'name': layer[0],
                             'data': [{
                                 'x': category[1],
                                 'y': [layer[1], layer[2]]
                             }]
                         })
+
+        # 镜下命名数据
 
         return Response(ret)
