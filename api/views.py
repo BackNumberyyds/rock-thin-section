@@ -81,7 +81,11 @@ class MineDetailData(APIView):
         mine_inst = Mine.objects.get(pk=pk)
         ret = {
             'layer_data': [],
-            'sample_name_data': []
+            'sample_name_data':
+            {
+                'data': [],
+                'categories': []
+            }
         }
 
         # 地质分层数据
@@ -130,5 +134,19 @@ class MineDetailData(APIView):
                         })
 
         # 镜下命名数据
+        sample_qs = RockSample.objects.filter(
+            mine_num=mine_inst).order_by("name")
+        sample_name_hash = []
+        for sample in sample_qs:
+            sample_name = str(sample.name)
+            if not sample_name in sample_name_hash:
+                sample_name_hash.append(sample_name)
+            ret['sample_name_data']['data'].append(
+                {
+                    'x': sample_name,
+                    'y': sample.depth
+                }
+            )
+        ret['sample_name_data']['categories'] = sample_name_hash
 
         return Response(ret)
