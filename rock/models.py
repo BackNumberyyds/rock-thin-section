@@ -177,3 +177,35 @@ class RockSample(models.Model):
 
     def __str__(self):
         return f'{self.mine_num}-{self.analysis_number}'
+
+
+# 岩石成分
+class RockComposition(models.Model):
+    name = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.name
+
+
+# 矿石成分
+class MineralComposition(models.Model):
+    name = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.name
+
+
+# 碎屑物成分
+class DepositComposition(models.Model):
+    name = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.name
+
+
+# 侵蚀成分
+class ErosionComposition(models.Model):
+    name = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.name
