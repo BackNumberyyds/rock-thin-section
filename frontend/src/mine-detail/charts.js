@@ -48,98 +48,6 @@ const options = {
     ]
 }
 
-// const options = {
-//     chart: {
-//         type: 'scatter'
-//     },
-//     series:
-//         [
-//             {
-//                 "name": "细粒岩屑砂岩",
-//                 "data": [
-//                     [
-//                         1,
-//                         6496.3
-//                     ],
-//                     [
-//                         1,
-//                         6506.0
-//                     ],
-//                     [
-//                         1,
-//                         6516.3
-//                     ],
-//                     [
-//                         1,
-//                         6544.3
-//                     ],
-//                     [
-//                         1,
-//                         6554.3
-//                     ],
-//                     [
-//                         1,
-//                         6580.3
-//                     ]
-//                 ]
-//             },
-//             {
-//                 "name": "含泥质粗粉砂岩",
-//                 "data": [
-//                     [
-//                         2,
-//                         6417.6
-//                     ],
-//                     [
-//                         2,
-//                         6421.6
-//                     ]
-//                 ]
-//             },
-//             {
-//                 "name": "泥质粉砂岩",
-//                 "data": [
-//                     [
-//                         3,
-//                         6419.9
-//                     ]
-//                 ]
-//             },
-//             {
-//                 "name": "泥质粗粉砂岩",
-//                 "data": [
-//                     [
-//                         4,
-//                         6422.9
-//                     ],
-//                     [
-//                         4,
-//                         6428.3
-//                     ]
-//                 ]
-//             },
-//             {
-//                 "name": "极细-细粒岩屑砂岩",
-//                 "data": [
-//                     [
-//                         5,
-//                         6537.2
-//                     ]
-//                 ]
-//             }
-//         ],
-//     xaxis: {
-//         tickInterval: 2,
-//         categories: [
-//             "细粒岩屑砂岩",
-//             "含泥质粗粉砂岩",
-//             "泥质粉砂岩",
-//             "泥质粗粉砂岩",
-//             "极细-细粒岩屑砂岩"
-//         ]
-//     }
-// }
-
 export class LayerChart extends React.Component {
     constructor(props) {
         super(props);
@@ -210,7 +118,7 @@ export class SampleNameChart extends React.Component {
 
     render() {
         return (
-            <VictoryChart>
+            <VictoryChart height={250}>
                 <VictoryAxis
                     tickValues={this.state.categories}
                     tickLabelComponent={
@@ -238,5 +146,104 @@ export class SampleNameChart extends React.Component {
                 />
             </VictoryChart>
         )
+    }
+}
+
+function generateRandomCompositions(xrange, yrange) {
+    var x = xrange[0];
+    var series = [], step, yvalue;
+    while (x < xrange[1]) {
+        yvalue = Math.round(Math.random() * 3);
+        step = Math.round(Math.random() * 10) + 1
+        for (let i = 0; i < step * 6; i += 6) {
+            series.push([x + i, yvalue]);
+        }
+        x += step * 6;
+    }
+    return series;
+}
+
+
+export class RockCompositionChart extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            series: [
+                {
+                    name: '粗砂岩',
+                    data: generateRandomCompositions([2500, 2900], [0, 3])
+                },
+                {
+                    name: '粉砂岩',
+                    data: generateRandomCompositions([2500, 2900], [0, 3])
+                },
+                {
+                    name: '玄武岩',
+                    data: generateRandomCompositions([2500, 2900], [0, 3])
+                },
+                {
+                    name: '细粒砂岩',
+                    data: generateRandomCompositions([2500, 2900], [0, 3])
+                },
+                {
+                    name: '花岗斑岩',
+                    data: generateRandomCompositions([2500, 2900], [0, 3])
+                },
+                {
+                    name: '火山角砾岩',
+                    data: generateRandomCompositions([2500, 2900], [0, 3])
+                },
+                {
+                    name: '流纹岩',
+                    data: generateRandomCompositions([2500, 2900], [0, 3])
+                }
+            ],
+            options: {
+                chart: {
+                    type: 'area',
+                    height: 350,
+                    stacked: true,
+                    toolbar: {
+                        show: false
+                    },
+                    zoom: {
+                        enabled: false
+                    }
+                },
+                colors: [
+                    "#008FFB", "#00E396", "#FEB019", "#FF4560", "#775DD0",
+                    "#3F51B5", "#546E7A", "#D4526E", "#8D5B4C", "#F86624",
+                    "#D7263D", "#1B998B", "#2E294E", "#F46036", "#E2C044"
+                ],
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    curve: 'smooth'
+                },
+                fill: {
+                    type: 'gradient',
+                    gradient: {
+                        opacityFrom: 0.6,
+                        opacityTo: 0.8,
+                    }
+                },
+                legend: {
+                    position: 'right',
+                    horizontalAlign: 'left'
+                },
+                xaxis: {
+                    type: 'numeric'
+                },
+            },
+        };
+    }
+
+    render() {
+        return (
+            <div id="chart">
+                <ReactApexChart options={this.state.options} series={this.state.series} type="area" height={350} />
+            </div>
+        );
     }
 }

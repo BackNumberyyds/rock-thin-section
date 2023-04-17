@@ -9,8 +9,8 @@
 {% block content %}
 
 <div class="container-fluid overflow-hidden">
-    <div class="row g-5 py-4 bg-light">
-        <div class="col-md-5 col-lg-4 order-md-last">
+    <div class="row g-5 py-4">
+        <div class="col-md-4 col-lg-3 bg-light">
             <h4 class="d-flex justify-content-between align-items-center mb-3">
                 <span class="text-primary">岩井详情</span>
             </h4>
@@ -48,16 +48,31 @@
                         <h6 class="my-0">样本总数</h6>
                         <small class="text-muted">total number of samples</small>
                     </div>
-                    <span class="text-muted"></span>
+                    <span class="text-muted">{{ mine.sample_num }}</span>
                 </li>
             </ul>
         </div>
-        <div class="col-md-7 col-lg-8">
-            <h4 class="d-flex justify-content-between align-items-center">
-                <span class="text-primary">地层分层</span>
-            </h4>
-            <div id="layer_chart"></div>
-            <div id="sample_name_chart"></div>
+        <div class="col-md-8 col-lg-9">
+            <div class="row">
+                <div class="col-12">
+                    <h4 class="d-flex justify-content-between align-items-center">
+                        <span class="text-primary">地层分层</span>
+                    </h4>
+                    <div id="layer_chart" class=""></div>
+                </div>
+                <div class="col-12">
+                    <h4 class="d-flex justify-content-between align-items-center">
+                        <span class="text-primary">样品定名</span>
+                    </h4>
+                    <div id="sample_name_chart"></div>
+                </div>
+                <div class="col-12">
+                    <h4 class="d-flex justify-content-between align-items-center">
+                        <span class="text-primary">岩石成分</span>
+                    </h4>
+                    <div id="rock_composition_chart"></div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
