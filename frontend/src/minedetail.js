@@ -10,5 +10,5 @@ fetch("/api" + window.location.pathname)
     .then(data => {
         ReactDOM.createRoot(LayerChartElement).render(<LayerChart data={data.layer_data} />);
         ReactDOM.createRoot(SampleNameElement).render(<SampleNameChart data={data.sample_name_data} />);
-        ReactDOM.createRoot(RockCompositionElement).render(<RockCompositionChart data={data.sample_name_data} />);
+        ReactDOM.createRoot(RockCompositionElement).render(<RockCompositionChart data={data.sample_composition_data.data} />);
     });

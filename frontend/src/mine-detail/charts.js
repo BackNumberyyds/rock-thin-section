@@ -168,47 +168,42 @@ export class RockCompositionChart extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            series: [
-                {
-                    name: '粗砂岩',
-                    data: generateRandomCompositions([2500, 2900], [0, 3])
-                },
-                {
-                    name: '粉砂岩',
-                    data: generateRandomCompositions([2500, 2900], [0, 3])
-                },
-                {
-                    name: '玄武岩',
-                    data: generateRandomCompositions([2500, 2900], [0, 3])
-                },
-                {
-                    name: '细粒砂岩',
-                    data: generateRandomCompositions([2500, 2900], [0, 3])
-                },
-                {
-                    name: '花岗斑岩',
-                    data: generateRandomCompositions([2500, 2900], [0, 3])
-                },
-                {
-                    name: '火山角砾岩',
-                    data: generateRandomCompositions([2500, 2900], [0, 3])
-                },
-                {
-                    name: '流纹岩',
-                    data: generateRandomCompositions([2500, 2900], [0, 3])
-                }
-            ],
+            series: props.data,
+            // series: [
+            //     {
+            //         name: '粗砂岩',
+            //         data: generateRandomCompositions([2500, 2900], [0, 3])
+            //     },
+            //     {
+            //         name: '粉砂岩',
+            //         data: generateRandomCompositions([2500, 2900], [0, 3])
+            //     },
+            //     {
+            //         name: '玄武岩',
+            //         data: generateRandomCompositions([2500, 2900], [0, 3])
+            //     },
+            //     {
+            //         name: '细粒砂岩',
+            //         data: generateRandomCompositions([2500, 2900], [0, 3])
+            //     },
+            //     {
+            //         name: '花岗斑岩',
+            //         data: generateRandomCompositions([2500, 2900], [0, 3])
+            //     },
+            //     {
+            //         name: '火山角砾岩',
+            //         data: generateRandomCompositions([2500, 2900], [0, 3])
+            //     },
+            //     {
+            //         name: '流纹岩',
+            //         data: generateRandomCompositions([2500, 2900], [0, 3])
+            //     }
+            // ],
             options: {
                 chart: {
                     type: 'area',
                     height: 350,
-                    stacked: true,
-                    toolbar: {
-                        show: false
-                    },
-                    zoom: {
-                        enabled: false
-                    }
+                    stacked: true
                 },
                 colors: [
                     "#008FFB", "#00E396", "#FEB019", "#FF4560", "#775DD0",

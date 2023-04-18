@@ -14,6 +14,7 @@ class Command(BaseCommand):
         parser.add_argument('--name', action='store_true', help='导入镜下命名')
         parser.add_argument(
             '--structure', action='store_true', help='导入结构')
+        parser.add_argument('--sample', action='store_true', help='导入样本信息')
         parser.add_argument('--delete', action='store_true', help='删除所有样本')
 
     def handle(self, *args, **options):
@@ -98,7 +99,7 @@ class Command(BaseCommand):
                             f'{file_name}\t{e}'))
         elif options['delete']:
             RockSample.objects.all().delete()
-        else:
+        elif options['sample']:
             for file_name in os.listdir(data_dir):
                 if file_name.endswith('.xls') or file_name.endswith('.xlsx'):
                     try:
